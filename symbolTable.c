@@ -12,10 +12,11 @@ typedef struct {
     int depth;
 } symbol;
 
-typedef struct {
-    struct symbolList * next;
+typedef struct symbolList symbolList;
+struct symbolList {
+    symbolList * next;
     symbol * sym;
-} symbolList;
+};
 
 static symbolList * symList = NULL; 
 
@@ -26,7 +27,7 @@ int computeShift() {
         if (listAux->sym->type == 0) {
             shift++;
         }
-        listAux = (symbolList*) listAux->next;
+        listAux = listAux->next;
     }
     return shift;
 }
@@ -39,30 +40,33 @@ int symInTable(char * name) {
             isInTable = 1;
             break;
         }
-        listAux = (symbolList*) listAux->next;
+        listAux = listAux->next;
     }
     return isInTable;
 }
 
 void addVarToList(char * name, int init, int type) {
     symbolList * listAux = symList;
-    symbol * symPtr;
+    symbol * symPtr = NULL;
     if (!symInTable(name)) {
         int shift = computeShift();
         symbol newSym = {name, init, type, shift, currentDepth};
-        symPtr = malloc(sizeof(newSym));
+        symPtr = malloc(sizeof(symbol));
+        *symPtr = newSym;
     }
 
     if (symList == NULL) {
-        symList = malloc(sizeof(symPtr));
-        symList -> next = symPtr;
-        symList = (symbol*) symPtr;
+        symList = malloc(sizeof(symbolList));
+        symList->next = NULL;
+        symList->sym = symPtr;
     }
     else {
         while(listAux->next != NULL) {
-            listAux = (symbolList*) listAux->next;
+            listAux = listAux->next;
         }
-        listAux->next = (symbol*) symPtr;
+        listAux->next = malloc(sizeof(symbolList));
+        listAux->next->next = NULL;
+        listAux->next->sym = symPtr;
     }
 }
 
