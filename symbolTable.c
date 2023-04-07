@@ -20,11 +20,21 @@ struct symbolList {
 
 static symbolList * symList = NULL; 
 
+void showSymTable(char* info){
+    symbolList * listAux = symList;
+    printf("FORMAT [name, init, type, shift, depth] \t TABLE %s: ", info);
+    while(listAux != NULL && listAux->sym != NULL) {
+        printf("[%s, %d, %d, %d, %d] ", listAux->sym->name,listAux->sym->init, listAux->sym->type, listAux->sym->shift, listAux->sym->depth);
+        listAux = (symbolList*) listAux->next;
+    }
+    printf("\n");
+}
+
 int computeShift() {
     symbolList * listAux = symList;
     int shift = 0;
     while(listAux != NULL) {
-        if (listAux->sym->type == 0) {
+        if ((listAux->sym != NULL) && listAux->sym->type == 0) {
             shift++;
         }
         listAux = listAux->next;
@@ -33,10 +43,13 @@ int computeShift() {
 }
 
 int symInTable(char * name) {
+    if (name == NULL) {
+        return 0;
+    }
     symbolList * listAux = symList;
     int isInTable = 0;
     while(listAux != NULL) {
-        if ((listAux->sym->depth == currentDepth) && (strcmp(listAux->sym->name, name) == 0)) {
+        if ((listAux->sym != NULL) && (listAux->sym->depth == currentDepth) && (strcmp(listAux->sym->name, name) == 0)) {
             isInTable = 1;
             break;
         }
@@ -68,40 +81,70 @@ void addVarToList(char * name, int init, int type) {
         listAux->next->next = NULL;
         listAux->next->sym = symPtr;
     }
+    showSymTable("after Add");
 }
 
 void delVarFromList() {
-    symbolList * listAux = symList;
-    symbolList * prev = NULL;
-    symbolList * toDelete;
-    while(listAux != NULL) {
-        if ((listAux->sym->depth > currentDepth)) {
-            toDelete = listAux;
-            if (prev != NULL) {
-                prev->next = NULL;
+    symbolList * toDelete = NULL;
+    
+    if (currentDepth == 0) {
+        toDelete = symList;
+        symList = NULL;
+    }
+    else {
+        symbolList * listAux = symList;
+        symbolList * prev = NULL;
+        while(listAux != NULL && listAux->sym != NULL) {
+            if ((listAux->sym->depth > currentDepth)) {
+                toDelete = listAux;
+                if (prev != NULL) {
+                    prev->next = NULL;
+                }
+                break;
             }
-            break;
+            prev = listAux;
+            listAux = listAux->next;
         }
-        prev = listAux;
-        listAux = (symbolList*) listAux->next;
     }
 
-    while (toDelete != NULL) {
-        symbolList* next = (symbolList*) toDelete->next;
+    while (toDelete != NULL && toDelete->next != NULL) {
+        symbolList* next = toDelete->next;
         free(toDelete);
         toDelete = next;
     }
+    showSymTable("after Del");
 }
 
 /* if name not found, returns -1 */
 int getShift(char * name) {
     symbolList * listAux = symList;
     int shift = -1;
-    while (listAux != NULL) {
+    while (listAux != NULL && listAux->sym != NULL) {
         if (strcmp(listAux->sym->name, name) == 0) {
             shift = listAux->sym->shift;
         }
-        listAux = (symbolList*) listAux->next;
+        listAux = listAux->next;
     }
     return shift;
+}
+
+void initLast(char * name) {
+    symbolList * listAux = symList;
+    symbol * last = listAux->sym;
+    int found = 0;
+    while (listAux != NULL && listAux->sym != NULL) {
+        if (strcmp(listAux->sym->name, name) == 0) {
+            last = listAux->sym;
+            found = 1;
+        }
+        listAux = listAux->next;
+    }
+    if (found) {
+        last->init = 1;
+    }
+    else {
+        fprintf(stderr, "Declaration missing for variable: %s\n", name);
+        exit(1);
+    }
+    showSymTable("after init");
 }

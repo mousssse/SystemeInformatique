@@ -5,6 +5,7 @@
   #include <string.h>
 
   int currentDepth = 0;
+  char * lastID;
 %}
 
 %code provides {
@@ -66,7 +67,7 @@ expression: assignment_expression
           ;
 
 block_statement: tLBRACE tRBRACE { printf("empty block\n"); }
-               | tLBRACE {currentDepth++; printf("new current depth: %d", currentDepth); } statement_list tRBRACE { currentDepth--; printf("block\n"); }
+               | tLBRACE { printf("new current depth: %d\n", ++currentDepth); } statement_list tRBRACE { printf("new current depth: %d\n", --currentDepth); delVarFromList(); printf("block\n"); }
                ;
 
 if_statement: tIF tLPAR relational_expression tRPAR statement %prec THEN { printf("if\n"); }
@@ -80,16 +81,17 @@ return_statement: tRETURN tSEMI { printf("returning void\n"); }
                 | tRETURN expression tSEMI { printf("returning an expression\n"); }
                 ;
 
-declaration_statement: tINT id_list tSEMI
-                     | tINT assignment_expression tSEMI
-                     | function_declaration
+declaration_statement: tINT id_list tSEMI {printf("Adding variables\n");}
+                     | tINT assignment_expression tSEMI {printf("Assigning variables\n");}
+                     | function_declaration {printf("function declaration\n");}
                      ;
 
-assignment_expression: id_list tASSIGN math_expression { printf("assigning a value\n"); }
+/* TODO: Currently, only the last var in id_list can be assigned */
+assignment_expression: id_list tASSIGN math_expression { initLast(lastID); printf("assigning a value\n"); }
                      ;
 
-id_list: tID
-       | id_list tCOMMA tID
+id_list: tID {addVarToList($1,0,0); lastID = $1;}
+       | tID tCOMMA id_list {addVarToList($1,0,0);}
        ;
 
 function_declaration: function_type tLPAR tVOID tRPAR block_statement { printf("function with no args\n"); }
@@ -100,7 +102,7 @@ function_type: tVOID tID
              | tINT tID
              ;
 
-int_list: tINT tID
+int_list: tINT tID {printf("int_list\n");}
         | int_list tCOMMA tINT tID
         ;
 
