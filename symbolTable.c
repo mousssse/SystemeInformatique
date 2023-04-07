@@ -18,7 +18,8 @@ struct symbolList {
     symbol * sym;
 };
 
-static symbolList * symList = NULL; 
+static symbolList * symList = NULL;
+int static tempNb = 0;
 
 void showSymTable(char* info){
     symbolList * listAux = symList;
@@ -147,4 +148,48 @@ void initLast(char * name) {
         exit(1);
     }
     showSymTable("after init");
+}
+
+/*
+    opType = 0 : COP (id)
+    opType = 1 : COP (nb)
+    opType = 2 : ADD
+    opType = 3 : SUB
+    opType = 4 : MUL
+    opType = 5 : DIV
+*/
+void arithmToAsm(char opType, char * name, int value) {
+    char* tmpName;
+    asprintf(&tmpName, "t%d", ++tempNb);
+    if (opType == 0) {
+        int addr = getShift(name);
+        addVarToList(tmpName, 1, 0);
+        int addrTmp = getShift(tmpName);
+        printf("COP %d, %d \n", addrTmp, addr);
+    }
+    else if (opType == 1) {
+        addVarToList(tmpName, 1, 0);
+        int addrTmp = getShift(tmpName);
+        printf("COP %d, %d \n", addrTmp, value);
+    }
+    else if (opType == 2) {
+        int t1 = freeTmp();
+        int t2 = getLastAddr();
+        printf("ADD %d, %d, %d\n", t1, t1, t2);
+    }
+    else if (opType == 3) {
+        int t1 = freeTmp();
+        int t2 = getLastAddr();
+        printf("SUB %d, %d, %d\n", t1, t1, t2);
+    }
+    else if (opType == 4) {
+        int t1 = freeTmp();
+        int t2 = getLastAddr();
+        printf("MUL %d, %d, %d\n", t1, t1, t2);
+    }
+    else if (opType == 5) {
+        int t1 = freeTmp();
+        int t2 = getLastAddr();
+        printf("DIV %d, %d, %d\n", t1, t1, t2);
+    }
 }
