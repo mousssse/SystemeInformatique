@@ -1,5 +1,6 @@
 %{
   #include "symbolTable.h"
+  #include "createAsm.h"
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
@@ -90,7 +91,7 @@ declaration_expression: tID { addVarToList($1, 0, 0); }
                       ;
 
 /* TODO: Currently, only the last var in id_list can be assigned */
-assignment_expression: tID tASSIGN math_expression { pop(); addVarToList($1, 1, 0); printf("assigning a value\n"); }
+assignment_expression: tID tASSIGN math_expression { deleteTmpVar(); addVarToList($1, 1, 0); int addr = getShift($1); char buf[256]; sprintf(buf, "POP sp%%%d (%s)\n", addr, $1); writeAsmLine(buf); printf("assigning a value\n"); }
                      ;
 
 function_declaration: function_type tLPAR tVOID tRPAR block_statement { printf("function with no args\n"); }
@@ -121,9 +122,11 @@ relation_operator: tLT { printf("lower\n"); }
                  ;
 
 math_expression: term
-              | math_expression math_operator math_expression  %prec tEMPTY { int tmpAddrArg = pop();
+              | math_expression math_operator math_expression  %prec tEMPTY { int tmpAddrArg = deleteTmpVar();
                                                                               int tmpAddrTerm = peek();
-                                                                              printf("%s @TMP(%d) @TMP(%d) @TMP(%d)\n", $2, tmpAddrTerm, tmpAddrTerm, tmpAddrArg);
+                                                                              char buf[256];
+                                                                              sprintf(buf, "%s sp%%%d sp%%%d sp%%%d\n", $2, tmpAddrTerm, tmpAddrTerm, tmpAddrArg);
+                                                                              writeAsmLine(buf);
                                                                             }
               | tLPAR relational_expression tRPAR
               ;
@@ -134,8 +137,8 @@ math_operator: tADD { $$ = "ADD"; printf("add\n"); }
              | tDIV { $$ = "DIV"; printf("div\n"); }
              ;
 
-term: tID %prec tEMPTY { createTmpVar(0); printf("Tmp var created for %s\n", $1); }
-    | tNB { printf("push #%d\n", $1); createTmpVar(0); printf("Tmp var created for '%d'\n", $1); }
+term: tID %prec tEMPTY { int addr = createTmpVar(0); printf("Tmp var created for %s\n", $1); char buf[256]; sprintf(buf, "PUSH [sp%%%d (%s)] (%d)\n", getShift($1), $1, addr); writeAsmLine(buf);}
+    | tNB { int addr = createTmpVar(0); printf("Tmp var created for '%d'\n", $1); char buf[256]; sprintf(buf, "PUSH #%d (%d)\n", $1, addr); writeAsmLine(buf); }
     | unary_expression {printf("unary\n");}
     | function_call {printf("f call\n");}
     ;
@@ -158,4 +161,13 @@ term_list: math_expression
 void yyerror(const char *msg) {
   fprintf(stderr, "error: %s\n", msg);
   exit(1);
+}
+
+int main(int argc, char** argv) {
+  if (argc != 2) {
+    yyerror("Wrong number of arguments. Format is: ./c_lang <assembly-file.s>");
+  }
+  initAsm(argv[1]);
+  yyparse();
+  closeAsm();
 }

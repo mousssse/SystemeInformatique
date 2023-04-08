@@ -1,7 +1,8 @@
 extern int currentDepth;
 
-void addVarToList(char * name, int init, int type);
+int addVarToList(char * name, int init, int type);
 void delVarFromList();
 int peek();
-void createTmpVar(int type);
-int pop();
+int getShift(char * name);
+int createTmpVar(int type);
+int deleteTmpVar();

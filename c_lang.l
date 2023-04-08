@@ -56,9 +56,3 @@ hex 0x[0-9A-Fa-f]+
 "," { return tCOMMA; }
 
 . { fprintf(stderr, "Invalid character: %s\n", yytext); }
-
-%%
-
-int main(int argc, char** argv) {
-	yyparse();
-}

@@ -58,17 +58,20 @@ symbol* symInTable(char * name) {
     return sym;
 }
 
-void addVarToList(char * name, int init, int type) {
+int addVarToList(char * name, int init, int type) {
+    int shift = -1;
     symbol * inTable = NULL;
     if (*name != 0 && (inTable = symInTable(name)) != NULL) {
         // var to update
         inTable->init = init;
+        shift = inTable->shift;
     }
     else {
         symbolList * listAux = symList;
         
         symbol * symPtr = malloc(sizeof(symbol));
-        symbol newSym = {name, init, type, computeShift(), currentDepth};
+        shift = computeShift();
+        symbol newSym = {name, init, type, shift, currentDepth};
         *symPtr = newSym;
 
         if (symList == NULL) {
@@ -86,6 +89,7 @@ void addVarToList(char * name, int init, int type) {
         }
         showSymTable("after Add");
     }
+    return shift;
 }
 
 void delVarFromList() {
@@ -129,7 +133,7 @@ int peek() {
     return listAux->sym->shift;
 }
 
-/* if name not found, returns -1. currently not used */
+/* if name not found, returns -1. */
 int getShift(char * name) {
     symbolList * listAux = symList;
     int shift = -1;
@@ -143,12 +147,12 @@ int getShift(char * name) {
 }
 
 /* create a temporary variable */
-void createTmpVar(int type) {
-    addVarToList("", 1, type);
+int createTmpVar(int type) {
+    return addVarToList("", 1, type);
 }
 
 /* deletes the last variable of the stack and returns its address */
-int pop() {
+int deleteTmpVar() {
     if (symList == NULL) {
         fprintf(stderr, "Cannot pop from empty stack\n");
         exit(1);
