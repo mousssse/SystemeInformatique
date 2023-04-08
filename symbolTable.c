@@ -19,13 +19,12 @@ struct symbolList {
 };
 
 static symbolList * symList = NULL;
-int static tempNb = 0;
 
-void showSymTable(char* info){
+void showSymTable(char* info) {
     symbolList * listAux = symList;
-    printf("FORMAT [name, init, type, shift, depth] \t TABLE %s: ", info);
+    printf("FORMAT {name, init, type, shift, depth} \t TABLE %s: ", info);
     while(listAux != NULL && listAux->sym != NULL) {
-        printf("[%s, %d, %d, %d, %d] ", listAux->sym->name,listAux->sym->init, listAux->sym->type, listAux->sym->shift, listAux->sym->depth);
+        printf("{%s, %d, %d, %d, %d} ", listAux->sym->name,listAux->sym->init, listAux->sym->type, listAux->sym->shift, listAux->sym->depth);
         listAux = (symbolList*) listAux->next;
     }
     printf("\n");
@@ -43,80 +42,94 @@ int computeShift() {
     return shift;
 }
 
-int symInTable(char * name) {
+symbol* symInTable(char * name) {
     if (name == NULL) {
-        return 0;
+        return NULL;
     }
     symbolList * listAux = symList;
-    int isInTable = 0;
+    symbol * sym = NULL;
     while(listAux != NULL) {
         if ((listAux->sym != NULL) && (listAux->sym->depth == currentDepth) && (strcmp(listAux->sym->name, name) == 0)) {
-            isInTable = 1;
+            sym = listAux->sym;
             break;
         }
         listAux = listAux->next;
     }
-    return isInTable;
+    return sym;
 }
 
 void addVarToList(char * name, int init, int type) {
-    symbolList * listAux = symList;
-    symbol * symPtr = NULL;
-    if (!symInTable(name)) {
-        int shift = computeShift();
-        symbol newSym = {name, init, type, shift, currentDepth};
-        symPtr = malloc(sizeof(symbol));
-        *symPtr = newSym;
-    }
-
-    if (symList == NULL) {
-        symList = malloc(sizeof(symbolList));
-        symList->next = NULL;
-        symList->sym = symPtr;
+    symbol * inTable = NULL;
+    if (*name != 0 && (inTable = symInTable(name)) != NULL) {
+        // var to update
+        inTable->init = init;
     }
     else {
-        while(listAux->next != NULL) {
-            listAux = listAux->next;
+        symbolList * listAux = symList;
+        
+        symbol * symPtr = malloc(sizeof(symbol));
+        symbol newSym = {name, init, type, computeShift(), currentDepth};
+        *symPtr = newSym;
+
+        if (symList == NULL) {
+            symList = malloc(sizeof(symbolList));
+            symList->next = NULL;
+            symList->sym = symPtr;
         }
-        listAux->next = malloc(sizeof(symbolList));
-        listAux->next->next = NULL;
-        listAux->next->sym = symPtr;
+        else {
+            while(listAux->next != NULL) {
+                listAux = listAux->next;
+            }
+            listAux->next = malloc(sizeof(symbolList));
+            listAux->next->next = NULL;
+            listAux->next->sym = symPtr;
+        }
+        showSymTable("after Add");
     }
-    showSymTable("after Add");
 }
 
 void delVarFromList() {
     symbolList * toDelete = NULL;
-    
-    if (currentDepth == 0) {
-        toDelete = symList;
-        symList = NULL;
-    }
-    else {
-        symbolList * listAux = symList;
-        symbolList * prev = NULL;
-        while(listAux != NULL && listAux->sym != NULL) {
-            if ((listAux->sym->depth > currentDepth)) {
-                toDelete = listAux;
-                if (prev != NULL) {
-                    prev->next = NULL;
-                }
-                break;
+    symbolList * listAux = symList;
+    symbolList * prev = NULL;
+    while(listAux != NULL && listAux->sym != NULL) {
+        if ((listAux->sym->depth > currentDepth)) {
+            toDelete = listAux;
+            if (prev != NULL) {
+                prev->next = NULL;
             }
-            prev = listAux;
-            listAux = listAux->next;
+            else {
+                symList = NULL;
+            }
+            break;
         }
+        prev = listAux;
+        listAux = listAux->next;
     }
 
-    while (toDelete != NULL && toDelete->next != NULL) {
+    while (toDelete != NULL && toDelete->sym != NULL && toDelete->next != NULL) {
         symbolList* next = toDelete->next;
+        free(toDelete->sym->name);
+        free(toDelete->sym);
         free(toDelete);
         toDelete = next;
     }
     showSymTable("after Del");
 }
 
-/* if name not found, returns -1 */
+int peek() {
+    if (symList == NULL) {
+        fprintf(stderr, "Stack is empty\n");
+        exit(1);
+    }
+    symbolList* listAux = symList;
+    while(listAux->next != NULL) {
+        listAux = listAux->next;
+    }
+    return listAux->sym->shift;
+}
+
+/* if name not found, returns -1. currently not used */
 int getShift(char * name) {
     symbolList * listAux = symList;
     int shift = -1;
@@ -129,67 +142,33 @@ int getShift(char * name) {
     return shift;
 }
 
-void initLast(char * name) {
-    symbolList * listAux = symList;
-    symbol * last = listAux->sym;
-    int found = 0;
-    while (listAux != NULL && listAux->sym != NULL) {
-        if (strcmp(listAux->sym->name, name) == 0) {
-            last = listAux->sym;
-            found = 1;
-        }
-        listAux = listAux->next;
-    }
-    if (found) {
-        last->init = 1;
-    }
-    else {
-        fprintf(stderr, "Declaration missing for variable: %s\n", name);
-        exit(1);
-    }
-    showSymTable("after init");
+/* create a temporary variable */
+void createTmpVar(int type) {
+    addVarToList("", 1, type);
 }
 
-/*
-    opType = 0 : COP (id)
-    opType = 1 : COP (nb)
-    opType = 2 : ADD
-    opType = 3 : SUB
-    opType = 4 : MUL
-    opType = 5 : DIV
-*/
-void arithmToAsm(char opType, char * name, int value) {
-    char* tmpName;
-    asprintf(&tmpName, "t%d", ++tempNb);
-    if (opType == 0) {
-        int addr = getShift(name);
-        addVarToList(tmpName, 1, 0);
-        int addrTmp = getShift(tmpName);
-        printf("COP %d, %d \n", addrTmp, addr);
+/* deletes the last variable of the stack and returns its address */
+int pop() {
+    if (symList == NULL) {
+        fprintf(stderr, "Cannot pop from empty stack\n");
+        exit(1);
     }
-    else if (opType == 1) {
-        addVarToList(tmpName, 1, 0);
-        int addrTmp = getShift(tmpName);
-        printf("COP %d, %d \n", addrTmp, value);
+    int shift;
+    symbolList * listAux = symList;
+    symbolList * prev = NULL;
+    while(listAux->next != NULL) {
+        prev = listAux;
+        listAux = listAux->next;
     }
-    else if (opType == 2) {
-        int t1 = freeTmp();
-        int t2 = getLastAddr();
-        printf("ADD %d, %d, %d\n", t1, t1, t2);
+    if (prev != NULL) {
+        prev->next = NULL;
     }
-    else if (opType == 3) {
-        int t1 = freeTmp();
-        int t2 = getLastAddr();
-        printf("SUB %d, %d, %d\n", t1, t1, t2);
+    else {
+        symList = NULL;
     }
-    else if (opType == 4) {
-        int t1 = freeTmp();
-        int t2 = getLastAddr();
-        printf("MUL %d, %d, %d\n", t1, t1, t2);
-    }
-    else if (opType == 5) {
-        int t1 = freeTmp();
-        int t2 = getLastAddr();
-        printf("DIV %d, %d, %d\n", t1, t1, t2);
-    }
+    shift = listAux->sym->shift;
+    free(listAux->sym);
+    free(listAux);
+    showSymTable("after pop");
+    return shift;
 }

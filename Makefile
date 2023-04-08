@@ -13,7 +13,8 @@ clean:
 	rm c_lang c_lang.tab.c lex.yy.c c_lang.tab.h c_lang.output
 
 test: all
-	echo 'void f(void) {int a = 2; a = 2*33+2/4*(5+2*4*(3+2)) + 2; f(3, 4, +5); (1+2)<3;}' | ./c_lang
+	#echo 'void f(void) {int a = 2; a = 2*33+2/4*(5+2*4*(3+2)) + 2; f(3, 4, +5); (1+2)<3;}' | ./c_lang
 	@echo ""
 
-	./c_lang < test/test.c
+	./c_lang < test/test_inter.c
+	#./c_lang < test/test.c

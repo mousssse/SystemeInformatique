@@ -5,7 +5,6 @@
   #include <string.h>
 
   int currentDepth = 0;
-  char * lastID;
 %}
 
 %code provides {
@@ -15,8 +14,10 @@
 
 %union {
   int num;
-  char *str;
+  char * str;
 }
+
+%type <str> math_operator
 
 %token <str> tID
 %token <num> tNB
@@ -36,6 +37,7 @@
 %right tLPAR
 %left tRPAR
 %left tADD tSUB tMUL tDIV
+%left tCOMMA
 
 %%
 
@@ -55,7 +57,6 @@ statement: expression_statement
          | if_statement
          | while_statement
          | return_statement
-         | declaration_statement
          ;
 
 expression_statement: tSEMI { printf("empty expression\n"); }
@@ -63,7 +64,9 @@ expression_statement: tSEMI { printf("empty expression\n"); }
                     ;
 
 expression: assignment_expression
+          | tINT declaration_expression
           | relational_expression
+          | function_declaration
           ;
 
 block_statement: tLBRACE tRBRACE { printf("empty block\n"); }
@@ -81,18 +84,14 @@ return_statement: tRETURN tSEMI { printf("returning void\n"); }
                 | tRETURN expression tSEMI { printf("returning an expression\n"); }
                 ;
 
-declaration_statement: tINT id_list tSEMI {printf("Adding variables\n");}
-                     | tINT assignment_expression tSEMI {printf("Assigning variables\n");}
-                     | function_declaration {printf("function declaration\n");}
-                     ;
+declaration_expression: tID { addVarToList($1, 0, 0); }
+                      | assignment_expression
+                      | declaration_expression tCOMMA declaration_expression %prec tEMPTY
+                      ;
 
 /* TODO: Currently, only the last var in id_list can be assigned */
-assignment_expression: id_list tASSIGN math_expression { initLast(lastID); printf("assigning a value\n"); }
+assignment_expression: tID tASSIGN math_expression { pop(); addVarToList($1, 1, 0); printf("assigning a value\n"); }
                      ;
-
-id_list: tID {addVarToList($1,0,0); lastID = $1;}
-       | tID tCOMMA id_list {addVarToList($1,0,0);}
-       ;
 
 function_declaration: function_type tLPAR tVOID tRPAR block_statement { printf("function with no args\n"); }
                     | function_type tLPAR int_list tRPAR block_statement { printf("function\n"); }
@@ -102,7 +101,7 @@ function_type: tVOID tID
              | tINT tID
              ;
 
-int_list: tINT tID {printf("int_list\n");}
+int_list: tINT tID { printf("int_list\n"); }
         | int_list tCOMMA tINT tID
         ;
 
@@ -122,20 +121,23 @@ relation_operator: tLT { printf("lower\n"); }
                  ;
 
 math_expression: term
-              | math_expression math_operator math_expression  %prec tEMPTY
+              | math_expression math_operator math_expression  %prec tEMPTY { int tmpAddrArg = pop();
+                                                                              int tmpAddrTerm = peek();
+                                                                              printf("%s @TMP(%d) @TMP(%d) @TMP(%d)\n", $2, tmpAddrTerm, tmpAddrTerm, tmpAddrArg);
+                                                                            }
               | tLPAR relational_expression tRPAR
               ;
 
-math_operator: tADD { printf("add\n"); }
-             | tSUB { printf("sub\n"); }
-             | tMUL { printf("mul\n"); }
-             | tDIV { printf("div\n"); }
+math_operator: tADD { $$ = "ADD"; printf("add\n"); }
+             | tSUB { $$ = "SUB"; printf("sub\n"); }
+             | tMUL { $$ = "MUL"; printf("mul\n"); }
+             | tDIV { $$ = "DIV"; printf("div\n"); }
              ;
 
-term: tID %prec tEMPTY { printf("id: '%s'\n", $1); }
-    | tNB { printf("number: '%d'\n", $1); }
-    | unary_expression
-    | function_call
+term: tID %prec tEMPTY { createTmpVar(0); printf("Tmp var created for %s\n", $1); }
+    | tNB { printf("push #%d\n", $1); createTmpVar(0); printf("Tmp var created for '%d'\n", $1); }
+    | unary_expression {printf("unary\n");}
+    | function_call {printf("f call\n");}
     ;
 
 unary_expression: tSUB term { printf("unary sub\n"); }
