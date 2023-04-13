@@ -43,28 +43,41 @@ int computeShift() {
 }
 
 symbol* symInTable(char * name) {
-    if (name == NULL) {
+    if (name == NULL || *name == 0) {
         return NULL;
     }
     symbolList * listAux = symList;
     symbol * sym = NULL;
     while(listAux != NULL) {
-        if ((listAux->sym != NULL) && (listAux->sym->depth == currentDepth) && (strcmp(listAux->sym->name, name) == 0)) {
+        if ((listAux->sym != NULL) && (strcmp(listAux->sym->name, name) == 0)) {
             sym = listAux->sym;
-            break;
         }
         listAux = listAux->next;
     }
     return sym;
 }
 
-int addVarToList(char * name, int init, int type) {
+
+int isInit(char* name) {
+    int res = 0;
+    symbol* sym = symInTable(name);
+    if (sym != NULL && sym->init == 1) {
+        res = 1; 
+    }
+    return res;
+}
+
+int addVarToList(char * name, int init, int type, int decl) {
     int shift = -1;
-    symbol * inTable = NULL;
-    if (*name != 0 && (inTable = symInTable(name)) != NULL) {
+    symbol * inTable = symInTable(name);
+    if (!decl && inTable != NULL) {
         // var to update
         inTable->init = init;
         shift = inTable->shift;
+    }
+    else if (decl && inTable != NULL && inTable->depth == currentDepth) {
+        shift = inTable->shift;
+        printf("re-declaring variable\n");
     }
     else {
         symbolList * listAux = symList;
@@ -113,7 +126,9 @@ void delVarFromList() {
 
     while (toDelete != NULL && toDelete->sym != NULL && toDelete->next != NULL) {
         symbolList* next = toDelete->next;
-        free(toDelete->sym->name);
+        if (*toDelete->sym->name != 0) {
+            free(toDelete->sym->name);
+        }
         free(toDelete->sym);
         free(toDelete);
         toDelete = next;
@@ -148,7 +163,7 @@ int getShift(char * name) {
 
 /* create a temporary variable */
 int createTmpVar(int type) {
-    return addVarToList("", 1, type);
+    return addVarToList("", 1, type, 0);
 }
 
 /* deletes the last variable of the stack and returns its address */
