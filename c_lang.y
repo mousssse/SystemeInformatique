@@ -77,7 +77,7 @@ block_statement: tLBRACE tRBRACE { printf("empty block\n"); }
                ;
 
 if_statement: tIF tLPAR condition tRPAR statement %prec THEN { printf("if\n"); }
-            | tIF tLPAR condition tRPAR statement tELSE { char buf[256]; sprintf(buf, "JMP .both\n.else:\n"); writeAsmLine(buf); printf("if/else\n"); } statement  {char buf[256]; sprintf(buf, ".both:\n"); writeAsmLine(buf); }
+            | tIF tLPAR condition tRPAR statement tELSE { char buf[256]; sprintf(buf, "JMP .both\n\n.else:\n"); writeAsmLine(buf); printf("if/else\n"); } statement  {char buf[256]; sprintf(buf, "\n.both:\n"); writeAsmLine(buf); }
             ;
 
 condition: relational_expression { writeAsmLine($1); }
@@ -116,10 +116,10 @@ relational_expression: math_expression { int tmpAddrArg = peek();
                                          $$ = buf;
                                        }
                      | tNOT relational_expression { printf("not\n"); }
-                     | relational_expression relation_operator relational_expression %prec tEMPTY { int tmpAddrArg = deleteTmpVar();
-                                                                                                    int tmpAddrTerm = peek();
+                     | relational_expression relation_operator relational_expression %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
+                                                                                                    /*int tmpAddrTerm = peek();*/
                                                                                                     char buf[256];
-                                                                                                    sprintf(buf, "SUB sp%%%d sp%%%d sp%%%d\nCMP sp%%%d, #0\n%s .else\n", tmpAddrTerm, tmpAddrTerm, tmpAddrArg, tmpAddrTerm, $2);
+                                                                                                    sprintf(buf, "POP R1\nPOP R0\nSUB R0 R0 R1\nCMP R0, #0\n%s .else\n\n", $2);
                                                                                                     $$ = buf;
                                                                                                   }
                      | relational_expression and_or_op relational_expression %prec tEMPTY

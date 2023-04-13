@@ -1,7 +1,7 @@
 int main(void) {
     int b;
     int a = 0 + 2 + b;
-    if (5) {
+    if (a != b) {
         a = 2;
     }
     else {
