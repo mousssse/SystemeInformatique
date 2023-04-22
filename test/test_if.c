@@ -2,9 +2,9 @@ int main(void) {
     int b;
     b = 4;
     int a = 0 + 2 + b;
-    if (b == a) {
+    if (!(b == a)) {
         int a = 2;
-        if (4) {
+        if ((a>2) || 2) {
             int d = 3;
         }
         b = 8;

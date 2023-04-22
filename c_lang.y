@@ -22,6 +22,7 @@
 
 %type <str> math_operator
 %type <str> relation_operator
+%type <str> and_or_op
 %type <str> relational_expression
 %type <num> if_condition
 
@@ -83,9 +84,9 @@ if_statement: tIF if_condition block_statement %prec THEN { newLine(); printf("i
             | tIF if_condition block_statement tELSE { addBranching($2); writeAsmLine("b .both\n"); $<num>4 = getLineCounter(); addBranching($<num>4); incrementCounter(3); newLine(); printf("if/else\n"); setJumpAddress($2); } block_statement { newLine(); setJumpAddress($<num>4); }
             ;
 
-if_condition: relational_expression { char* branch = strdup($1); writeAsmLine("pop r0\n"); incrementCounter(2); char buf[256]; sprintf(buf, "cmp r0, #0\n"); writeAsmLine(buf); incrementCounter(3); sprintf(buf, "%s .else\n", branch); writeAsmLine(buf); $$ = getLineCounter(); incrementCounter(3); free(branch); }
+if_condition: tLPAR relational_expression tRPAR { char* branch = strdup($2); writeAsmLine("pop r0\n"); incrementCounter(2); char buf[256]; sprintf(buf, "cmp r0, #0\n"); writeAsmLine(buf); incrementCounter(3); sprintf(buf, "%s .else\n", branch); writeAsmLine(buf); $$ = getLineCounter(); incrementCounter(3); free(branch); }
 
-while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE relational_expression { writeAsmLine("pop r0\n"); incrementCounter(2); writeAsmLine("cmp r0, #0\n"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else\n", $3); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(3); newLine(); } block_statement { char buf[256]; sprintf(buf, "b 0x%04X\n", $<num>0); writeAsmLine(buf); newLine(); incrementCounter(3); setJumpAddress($<num>2);  }
+while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE tLPAR relational_expression tRPAR { writeAsmLine("pop r0\n"); incrementCounter(2); writeAsmLine("cmp r0, #0\n"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else\n", $4); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(3); newLine(); } block_statement { char buf[256]; sprintf(buf, "b 0x%04X\n", $<num>0); writeAsmLine(buf); newLine(); incrementCounter(3); setJumpAddress($<num>2);  }
                ;
 
 return_statement: tRETURN tSEMI { printf("returning void\n"); }
@@ -114,26 +115,37 @@ int_list: tINT tID { printf("int_list\n"); free($2); }
         | int_list tCOMMA tINT tID  { free($4); }
         ;
 
-relational_expression: tLPAR math_expression tRPAR { /*int tmpAddrArg = peek();*/
+relational_expression: math_expression { /*int tmpAddrArg = peek();*/
                                                      char buf[256];
                                                      sprintf(buf, "beq");
                                                      printf("%s\n", buf);
                                                      $$ = buf;
                                                    }
-                     | tLPAR tNOT relational_expression tRPAR {$$ = $3;}
-                     | tLPAR math_expression relation_operator math_expression tRPAR %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
-                                                                                        /*int tmpAddrTerm = peek();*/
-                                                                                        writeAsmLine("pop r1\n");
-                                                                                        incrementCounter(2);
-                                                                                        writeAsmLine("pop r0\n");
-                                                                                        incrementCounter(2);
-                                                                                        writeAsmLine("sub r0 r0 r1\n");
-                                                                                        incrementCounter(4);
-                                                                                        writeAsmLine("push r0\n");
-                                                                                        incrementCounter(2);
-                                                                                        $$ = $3;
-                                                                                      }
-                     | tLPAR relational_expression and_or_op relational_expression tRPAR %prec tEMPTY {$$ = $2; /*TODO*/}
+                     | tNOT relational_expression { $$ = "bne"; }
+                     | math_expression relation_operator math_expression { /*int tmpAddrArg =*/ deleteTmpVar();
+                                                                           /*int tmpAddrTerm = peek();*/
+                                                                           writeAsmLine("pop r1\n");
+                                                                           incrementCounter(2);
+                                                                           writeAsmLine("pop r0\n");
+                                                                           incrementCounter(2);
+                                                                           writeAsmLine("sub r0 r0 r1\n");
+                                                                           incrementCounter(4);
+                                                                           writeAsmLine("push r0\n");
+                                                                           incrementCounter(2);
+                                                                           $$ = $2;
+                                                                         }
+                     | relational_expression and_or_op relational_expression %prec tEMPTY { writeAsmLine("pop r1\n");
+                                                                                            incrementCounter(2);
+                                                                                            writeAsmLine("pop r0\n");
+                                                                                            incrementCounter(2);
+                                                                                            char buf[256];
+                                                                                            sprintf(buf, "%s r0 r0 r1\n", $2);
+                                                                                            writeAsmLine(buf);
+                                                                                            incrementCounter(4);
+                                                                                            writeAsmLine("push r0\n");
+                                                                                            incrementCounter(2);
+                                                                                            $$ = "beq"; 
+                                                                                          }
                      ;
 
 relation_operator: tLT { $$ = "bge"; }
@@ -144,11 +156,11 @@ relation_operator: tLT { $$ = "bge"; }
                  | tNE { $$ = "beq"; }
                  ;
 
-and_or_op: tAND
-         | tOR
+and_or_op: tAND { $$ = "mul"; }
+         | tOR { $$ = "add"; }
          ;
 
-//TODO parenthesis in maths
+//TODO parenthesis/priority in maths
 math_expression: term
               | math_expression math_operator math_expression  %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                               /*int tmpAddrTerm = peek();*/
@@ -165,7 +177,7 @@ math_expression: term
                                                                               writeAsmLine("push r0\n");
                                                                               incrementCounter(6);
                                                                             }
-              | relational_expression
+              | tLPAR relational_expression tRPAR
               ;
 
 math_operator: tADD { $$ = "add"; printf("add\n"); }
