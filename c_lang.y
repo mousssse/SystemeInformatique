@@ -84,7 +84,7 @@ if_statement: tIF if_condition statement %prec THEN { newLine(); printf("if\n");
 
 if_condition: relational_expression { char* branch = strdup($1); writeAsmLine("pop r0\n"); incrementCounter(2); char buf[256]; sprintf(buf, "cmp r0, #0\n"); writeAsmLine(buf); incrementCounter(3); sprintf(buf, "%s .else\n", branch); writeAsmLine(buf); $$ = getLineCounter(); incrementCounter(3); free(branch); }
 
-while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE relational_expression { writeAsmLine("pop r0\n"); incrementCounter(2); writeAsmLine("cmp r0, #0\n"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else\n", $3); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(3); newLine(); } statement { char buf[256]; sprintf(buf, "b 0x%04X:\n", $<num>0); writeAsmLine(buf); newLine(); incrementCounter(3); setJumpAddress($<num>2);  }
+while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE relational_expression { writeAsmLine("pop r0\n"); incrementCounter(2); writeAsmLine("cmp r0, #0\n"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else\n", $3); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(3); newLine(); } statement { char buf[256]; sprintf(buf, "b 0x%04X\n", $<num>0); writeAsmLine(buf); newLine(); incrementCounter(3); setJumpAddress($<num>2);  }
                ;
 
 return_statement: tRETURN tSEMI { printf("returning void\n"); }

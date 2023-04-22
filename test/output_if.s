@@ -37,14 +37,7 @@
 0x0057: push #3 (3)
 0x0059: pop sp%1 (a)
 
-0x005B: push [sp%1 (a)] (3)
-0x005D: pop r0
-0x005F: cmp r0, #0
-0x0062: beq 0x0069
-0x0065: push #29 (4)
-0x0067: pop sp%0 (b)
-
-0x0069: push #5 (4)
-0x006B: pop sp%4 (e)
-0x006D: push [sp%1 (a)] (5)
-0x006F: pop {pc}
+0x005B: push #5 (3)
+0x005D: pop sp%3 (e)
+0x005F: push [sp%1 (a)] (4)
+0x0061: pop {pc}
