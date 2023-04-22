@@ -58,12 +58,17 @@ int getLineCounter() {
     return lineCounter;
 }
 
-void showAddrList() {
+void addrListToPythonDict(const char * filename) {
     addressList * listAux = addrList;
-    printf("Addresses list:\n");
-    while(listAux != NULL && listAux->addr != NULL) {
-        printf("\t0x%04X -> 0x%04X\n", listAux->addr->branchAddress, listAux->addr->jumpAddress);
+    FILE * pyFile = fopen(filename, "w");
+    fprintf(pyFile, "addrDict = {\n");
+    while(listAux != NULL && listAux->addr != NULL && listAux->next != NULL) {
+        fprintf(pyFile, "\t\"0x%04X\": \"0x%04X\",\n", listAux->addr->branchAddress, listAux->addr->jumpAddress);
         listAux = (addressList*) listAux->next;
     }
-    printf("\n");
+    if (listAux != NULL && listAux->addr != NULL) {
+        fprintf(pyFile, "\t\"0x%04X\": \"0x%04X\"\n", listAux->addr->branchAddress, listAux->addr->jumpAddress);
+    }
+    fprintf(pyFile, "}");
+    fclose(pyFile);
 }

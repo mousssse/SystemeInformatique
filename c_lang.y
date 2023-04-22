@@ -46,7 +46,7 @@
 
 %%
 
-program: {currentDepth = 0;} function_list { showAddrList(); printf("\n----------program parsed correctly----------\n"); }
+program: {currentDepth = 0;} function_list { printf("\n----------program parsed correctly----------\n"); }
        | /* empty */ { printf("\n----------empty program----------\n"); }
        ;
 
@@ -78,13 +78,13 @@ block_statement: tLBRACE tRBRACE { printf("empty block\n"); }
                | tLBRACE { printf("new current depth: %d\n", ++currentDepth); } statement_list tRBRACE { printf("new current depth: %d\n", --currentDepth); delVarFromList(); printf("block\n"); }
                ;
 
-if_statement: tIF if_condition statement %prec THEN { writeLabel(".else"); printf("if\n"); addBranching($2); setJumpAddress($2); }
-            | tIF if_condition statement tELSE { addBranching($2); writeAsmLine("b .both\n"); $<num>4 = getLineCounter(); addBranching($<num>4); incrementCounter(3); writeLabel(".else"); printf("if/else\n"); setJumpAddress($2); } statement { writeLabel(".both"); setJumpAddress($<num>4); }
+if_statement: tIF if_condition statement %prec THEN { newLine(); printf("if\n"); addBranching($2); setJumpAddress($2); }
+            | tIF if_condition statement tELSE { addBranching($2); writeAsmLine("b .both\n"); $<num>4 = getLineCounter(); addBranching($<num>4); incrementCounter(3); newLine(); printf("if/else\n"); setJumpAddress($2); } statement { newLine(); setJumpAddress($<num>4); }
             ;
 
 if_condition: relational_expression { char* branch = strdup($1); writeAsmLine("pop r0\n"); incrementCounter(2); char buf[256]; sprintf(buf, "cmp r0, #0\n"); writeAsmLine(buf); incrementCounter(3); sprintf(buf, "%s .else\n", branch); writeAsmLine(buf); $$ = getLineCounter(); incrementCounter(3); free(branch); }
 
-while_statement: { $<num>0 = getLineCounter(); writeLabel(".cond"); } tWHILE relational_expression { writeAsmLine("pop r0\n"); incrementCounter(2); writeAsmLine("cmp r0, #0\n"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else\n", $3); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(3); writeLabel(".loop"); } statement { char buf[256]; sprintf(buf, "b 0x%04X:\n", $<num>0); writeAsmLine(buf); writeLabel(".else"); incrementCounter(3); setJumpAddress($<num>2);  }
+while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE relational_expression { writeAsmLine("pop r0\n"); incrementCounter(2); writeAsmLine("cmp r0, #0\n"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else\n", $3); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(3); newLine(); } statement { char buf[256]; sprintf(buf, "b 0x%04X:\n", $<num>0); writeAsmLine(buf); newLine(); incrementCounter(3); setJumpAddress($<num>2);  }
                ;
 
 return_statement: tRETURN tSEMI { printf("returning void\n"); }
@@ -200,10 +200,11 @@ void yyerror(const char *msg) {
 }
 
 int main(int argc, char** argv) {
-  if (argc != 2) {
-    yyerror("Wrong number of arguments. Format is: ./c_lang <assembly-file.s>");
+  if (argc != 3) {
+    yyerror("Wrong number of arguments. Format is: ./c_lang <assembly-file.s> <python-file.py>");
   }
   initAsm(argv[1]);
   yyparse();
   closeAsm();
+  addrListToPythonDict(argv[2]);
 }

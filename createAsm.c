@@ -12,8 +12,8 @@ void writeAsmLine(const char * line) {
     fprintf(file, "0x%.*X: %s", 4, getLineCounter(), line);
 }
 
-void writeLabel(const char * label) {
-    fprintf(file, "%s:\n", label);
+void newLine() {
+    fprintf(file, "\n");
 }
 
 void closeAsm() {
