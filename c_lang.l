@@ -7,6 +7,8 @@
 	#include <stdlib.h>
 	#include <string.h>
 	#include "c_lang.tab.h"
+
+	extern int lineNumber;
 %}
 
 alpha [a-zA-Z]
@@ -29,7 +31,8 @@ hex 0x[0-9A-Fa-f]+
 
 {alpha}{alphanum}* { yylval.str = strdup(yytext); return tID; }
 
-[ \t\n\r] { /* ignore whitespace */ }
+[\n] { lineNumber++; }
+[ \t\r] { /* ignore whitespace */ }
 "//".* { /* ignore single-line comments */ { printf("comment\n"); } }
 "/*"([^*]|\n|(\*+[^*/]))*"*/" { /* ignore multiline comments */ { printf("multiline comment\n"); } }
 
