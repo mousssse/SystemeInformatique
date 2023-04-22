@@ -1,0 +1,51 @@
+0x0000: push #0 (1)
+0x0002: push #2 (2)
+0x0004: push [sp%0 (b)] (3)
+0x0006: pop r1
+0x0008: pop r0
+0x000A: add r0, r0, r1
+0x000E: push r0
+0x0014: pop r1
+0x0016: pop r0
+0x0018: add r0, r0, r1
+0x001C: push r0
+0x0022: pop sp%1 (a)
+.cond:
+0x0024: push [sp%1 (a)] (2)
+0x0026: push [sp%0 (b)] (3)
+0x0028: pop r1
+0x002A: pop r0
+0x002C: sub r0 r0 r1
+0x0030: push r0
+0x0032: pop r0
+0x0034: cmp r0, #0
+0x0037: beq .else
+.loop:
+0x003A: push #0 (3)
+0x003C: pop sp%1 (a)
+.cond:
+0x003E: push #1 (3)
+0x0040: pop r0
+0x0042: cmp r0, #0
+0x0045: beq .else
+.loop:
+0x0048: push #2 (4)
+0x004A: pop sp%0 (b)
+0x004C: b 0x003E:
+.else:
+0x004F: push [sp%1 (a)] (4)
+0x0051: push #5 (5)
+0x0053: pop r1
+0x0055: pop r0
+0x0057: sub r0 r0 r1
+0x005B: push r0
+0x005D: pop r0
+0x005F: cmp r0, #0
+0x0062: ble .else
+0x0065: push #7 (5)
+0x0067: pop sp%5 (d)
+.else:
+0x0069: b 0x0024:
+.else:
+0x006C: push [sp%1 (a)] (3)
+0x006E: pop {pc}

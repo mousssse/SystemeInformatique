@@ -67,28 +67,35 @@ int isInit(char* name) {
     return res;
 }
 
-int addVarToList(char * name, int init, int type, int decl) {
+void init(char * name) {
+    symbol * sym = symInTable(name);
+    if (sym != NULL) {
+        sym->init = 1;
+    }
+    else {
+        fprintf(stderr, "Cannot init unexistent variable\n");
+        exit(1);
+    }
+}
+
+int addVarToList(char * name, int init, int type) {
     int shift = -1;
     symbol * inTable = symInTable(name);
-    if (!decl && inTable != NULL) {
-        // var to update
-        inTable->init = init;
-        shift = inTable->shift;
-    }
-    else if (decl && inTable != NULL && inTable->depth == currentDepth) {
-        shift = inTable->shift;
-        printf("re-declaring variable\n");
+    if (inTable != NULL && inTable->depth == currentDepth ) {
+        // var already exists
+        fprintf(stderr, "error: redefinition of ‘%s’\n", name);
+        exit(1);
     }
     else {
         symbolList * listAux = symList;
         
-        symbol * symPtr = malloc(sizeof(symbol));
+        symbol * symPtr = (symbol*) malloc(sizeof(symbol));
         shift = computeShift();
         symbol newSym = {name, init, type, shift, currentDepth};
         *symPtr = newSym;
 
         if (symList == NULL) {
-            symList = malloc(sizeof(symbolList));
+            symList = (symbolList*) malloc(sizeof(symbolList));
             symList->next = NULL;
             symList->sym = symPtr;
         }
@@ -96,7 +103,7 @@ int addVarToList(char * name, int init, int type, int decl) {
             while(listAux->next != NULL) {
                 listAux = listAux->next;
             }
-            listAux->next = malloc(sizeof(symbolList));
+            listAux->next = (symbolList*) malloc(sizeof(symbolList));
             listAux->next->next = NULL;
             listAux->next->sym = symPtr;
         }
@@ -163,7 +170,7 @@ int getShift(char * name) {
 
 /* create a temporary variable */
 int createTmpVar(int type) {
-    return addVarToList("", 1, type, 0);
+    return addVarToList("", 1, type);
 }
 
 /* deletes the last variable of the stack and returns its address */
