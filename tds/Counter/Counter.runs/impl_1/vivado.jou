@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2018.2 (64-bit)
+# SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
+# IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
+# Start of session at: Fri Mar 24 14:14:13 2023
+# Process ID: 4521
+# Current directory: /home/mousset/Documents/4A/Projet_Syst_Info/Counter/Counter.runs/impl_1
+# Command line: vivado -log Counter8bits.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source Counter8bits.tcl -notrace
+# Log file: /home/mousset/Documents/4A/Projet_Syst_Info/Counter/Counter.runs/impl_1/Counter8bits.vdi
+# Journal file: /home/mousset/Documents/4A/Projet_Syst_Info/Counter/Counter.runs/impl_1/vivado.jou
+#-----------------------------------------------------------
+source Counter8bits.tcl -notrace
