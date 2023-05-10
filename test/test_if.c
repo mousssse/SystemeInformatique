@@ -15,3 +15,9 @@ int main(void) {
     int e = 5;
     return a;
 }
+
+void res(int a) {
+    int a = 0;
+    int b = main(3) + 1;
+    int c = 2;
+}

@@ -15,7 +15,7 @@ struct addressList {
 };
 
 int lineCounter = 0x00;
-static addressList * addrList = NULL;
+addressList * addrList = NULL;
 
 void addBranching(int branchAddress) {
     addressList * listAux = addrList;
@@ -61,13 +61,13 @@ int getLineCounter() {
 void addrListToPythonDict(const char * filename) {
     addressList * listAux = addrList;
     FILE * pyFile = fopen(filename, "w");
-    fprintf(pyFile, "addrDict = {\n");
+    fprintf(pyFile, "{ ");
     while(listAux != NULL && listAux->addr != NULL && listAux->next != NULL) {
-        fprintf(pyFile, "\t\"0x%04X\": \"0x%04X\",\n", listAux->addr->branchAddress, listAux->addr->jumpAddress);
+        fprintf(pyFile, "\"0x%.*X\": \"0x%.*X\", ", 2 * ADDRESS_SIZE, listAux->addr->branchAddress, 2 * ADDRESS_SIZE, listAux->addr->jumpAddress);
         listAux = (addressList*) listAux->next;
     }
     if (listAux != NULL && listAux->addr != NULL) {
-        fprintf(pyFile, "\t\"0x%04X\": \"0x%04X\"\n", listAux->addr->branchAddress, listAux->addr->jumpAddress);
+        fprintf(pyFile, "\"0x%.*X\": \"0x%.*X\" ", 2 * ADDRESS_SIZE, listAux->addr->branchAddress, 2 * ADDRESS_SIZE, listAux->addr->jumpAddress);
     }
     fprintf(pyFile, "}");
     fclose(pyFile);

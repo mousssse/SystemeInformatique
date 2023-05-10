@@ -1,4 +1,5 @@
 #include "symbolTable.h"
+#include "branching.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -18,7 +19,20 @@ struct symbolList {
     symbol * sym;
 };
 
-static symbolList * symList = NULL;
+typedef struct {
+    char * name;
+    int addr;
+    int nbArg;
+} function;
+
+typedef struct functionList functionList;
+struct functionList {
+    functionList * next;
+    function * fun;
+};
+
+symbolList * symList = NULL;
+functionList * funList = NULL;
 
 void showSymTable(char* info) {
     symbolList * listAux = symList;
@@ -56,7 +70,6 @@ symbol* symInTable(char * name) {
     }
     return sym;
 }
-
 
 int isInit(char* name) {
     int res = 0;
@@ -112,7 +125,7 @@ int addVarToList(char * name, int init, int type) {
     return shift;
 }
 
-void delVarFromList() {
+int delVarFromList() {
     symbolList * toDelete = NULL;
     symbolList * listAux = symList;
     symbolList * prev = NULL;
@@ -130,17 +143,33 @@ void delVarFromList() {
         prev = listAux;
         listAux = listAux->next;
     }
-
-    while (toDelete != NULL && toDelete->sym != NULL && toDelete->next != NULL) {
+    
+    // to count the nb of variables (not tmp) that are deleted
+    int count = 0;
+    while (toDelete != NULL && toDelete->sym != NULL) {
         symbolList* next = toDelete->next;
         if (*toDelete->sym->name != 0) {
             free(toDelete->sym->name);
+            count++;
         }
         free(toDelete->sym);
         free(toDelete);
         toDelete = next;
     }
     showSymTable("after Del");
+    return count;
+}
+
+int nbVarInTable() {
+    showSymTable("NB CALL");
+    int nbVar = 0;
+    symbolList * listAux = symList;
+    while(listAux != NULL && listAux->sym != NULL) {
+        if (*listAux->sym->name != 0) { nbVar++; }
+        listAux = (symbolList*) listAux->next;
+    }
+    printf("\n");
+    return nbVar;
 }
 
 int peek() {
@@ -197,4 +226,76 @@ int deleteTmpVar() {
     free(listAux);
     showSymTable("after pop");
     return shift;
+}
+
+void showFunTable(char* info) {
+    functionList * listAux = funList;
+    printf("FORMAT {name, addr} \t FUN TABLE %s: ", info);
+    while(listAux != NULL && listAux->fun != NULL) {
+        printf("{%s, 0x%.*X} ", listAux->fun->name, 2 * ADDRESS_SIZE, listAux->fun->addr);
+        listAux = (functionList*) listAux->next;
+    }
+    printf("\n");
+}
+
+int funInTable(char * name) {
+    functionList * listAux = funList;
+    while(listAux != NULL) {
+        if ((listAux->fun != NULL) && (strcmp(listAux->fun->name, name) == 0)) {
+            return 1;
+        }
+        listAux = listAux->next;
+    }
+    return 0;
+}
+
+void addFunToList(char * name, int addr, int nbArg) {
+    if (funInTable(name)) {
+        // function already exists
+        fprintf(stderr, "error: redefinition of ‘%s’\n", name);
+        exit(1);
+    }
+    else {
+        functionList * listAux = funList;
+        
+        function * funPtr = (function*) malloc(sizeof(function));
+        function newFun = {name, addr, nbArg};
+        *funPtr = newFun;
+
+        if (funList == NULL) {
+            funList = (functionList*) malloc(sizeof(functionList));
+            funList->next = NULL;
+            funList->fun = funPtr;
+        }
+        else {
+            while(listAux->next != NULL) {
+                listAux = listAux->next;
+            }
+            listAux->next = (functionList*) malloc(sizeof(functionList));
+            listAux->next->next = NULL;
+            listAux->next->fun = funPtr;
+        }
+        showFunTable("after Add");
+    }
+}
+
+int getFunAddr(char * name, int nbArg) {
+    functionList * listAux = funList;
+    while (listAux != NULL && listAux->fun != NULL) {
+        if (strcmp(listAux->fun->name, name) == 0) {
+            if (listAux->fun->nbArg < nbArg) {
+                fprintf(stderr, "error: too many arguments to function ‘%s’\n", name);
+                exit(1);
+            }
+            else if (listAux->fun->nbArg > nbArg) {
+                fprintf(stderr, "error: too few arguments to function ‘%s’\n", name);
+                exit(1);
+            }
+            return listAux->fun->addr;
+        }
+        listAux = listAux->next;
+    }
+    // function doesn't exist
+    fprintf(stderr, "error: undefined reference to ‘%s’\n", name);
+    exit(1);
 }
