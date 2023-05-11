@@ -101,12 +101,12 @@ declaration_expression: tID { writeAsmLine("sub sp, sp, #1"); incrementCounter(4
 assignment_expression: tID tASSIGN math_expression { deleteTmpVar(); init($1); writeAsmLine("pop r0"); incrementCounter(2); int addr = getShift($1); char buf[256]; sprintf(buf, "str r0, bp%%%d (%s)", addr, $1); writeAsmLine(buf); incrementCounter(3); printf("assigning a value\n"); free($1); }
                      ;
 
-function_declaration: function_type tLPAR tVOID tRPAR block_statement { writeAsmLine("pop pc"); incrementCounter(2); newLine(); printf("function with no args\n"); }
-                    | function_type tLPAR int_list tRPAR block_statement { writeAsmLine("pop pc"); incrementCounter(2); newLine(); printf("function\n"); }
+function_declaration: function_type tLPAR tVOID tRPAR block_statement { writeAsmLine("pop pc"); incrementCounter(2); writeAsmLine("add sp, sp, #1"); incrementCounter(4); newLine(); printf("function with no args\n"); }
+                    | function_type tLPAR int_list tRPAR block_statement { writeAsmLine("pop pc"); incrementCounter(2); writeAsmLine("add sp, sp, #1"); incrementCounter(4); newLine(); printf("function\n"); }
                     ;
 
-function_type: tVOID tID { addFunToList($2, getLineCounter(), 0); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); writeAsmLine("push lr"); incrementCounter(2); }
-             | tINT tID { addFunToList($2, getLineCounter(), 0); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); writeAsmLine("push lr"); incrementCounter(2); }
+function_type: tVOID tID { addFunToList($2, getLineCounter(), 0); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); writeAsmLine("sub sp, sp, #1"); incrementCounter(4); writeAsmLine("push lr"); incrementCounter(2); }
+             | tINT tID { addFunToList($2, getLineCounter(), 0); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); writeAsmLine("sub sp, sp, #1"); incrementCounter(4); writeAsmLine("push lr"); incrementCounter(2); }
              ;
 
 int_list: tINT tID { printf("int_list %s\n", $2); free($2); }
@@ -126,7 +126,7 @@ relational_expression: math_expression { /*int tmpAddrArg = peek();*/
                                                                            incrementCounter(2);
                                                                            writeAsmLine("pop r0");
                                                                            incrementCounter(2);
-                                                                           writeAsmLine("sub r0 r0 r1");
+                                                                           writeAsmLine("sub r0, r0, r1");
                                                                            incrementCounter(4);
                                                                            writeAsmLine("push r0");
                                                                            incrementCounter(2);
@@ -137,7 +137,7 @@ relational_expression: math_expression { /*int tmpAddrArg = peek();*/
                                                                                             writeAsmLine("pop r0");
                                                                                             incrementCounter(2);
                                                                                             char buf[256];
-                                                                                            sprintf(buf, "%s r0 r0 r1", $2);
+                                                                                            sprintf(buf, "%s r0, r0, r1", $2);
                                                                                             writeAsmLine(buf);
                                                                                             incrementCounter(4);
                                                                                             writeAsmLine("push r0");
