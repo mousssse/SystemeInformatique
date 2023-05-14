@@ -165,8 +165,8 @@ int nbVarInTable() {
     int nbVar = 0;
     symbolList * listAux = symList;
     while(listAux != NULL && listAux->sym != NULL) {
-        if (*listAux->sym->name != 0) { nbVar++; }
         listAux = (symbolList*) listAux->next;
+        nbVar++;
     }
     printf("\n");
     return nbVar;
