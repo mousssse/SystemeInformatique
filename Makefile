@@ -20,3 +20,6 @@ test: all
 
 	./c_lang ./test/output_while.s pythonDict.py < test/test_while.c
 	python3 ./branching.py ./test/output_while.s
+
+	./c_lang ./test/output_function.s pythonDict.py < test/test_function.c
+	python3 ./branching.py ./test/output_function.s
