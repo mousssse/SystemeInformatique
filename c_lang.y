@@ -115,11 +115,11 @@ int_list: tINT tID { printf("int_list %s\n", $2); free($2); }
 
 relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();*/
                                                       char buf[256];
-                                                      sprintf(buf, "beq");
+                                                      sprintf(buf, "bne");
                                                       printf("%s\n", buf);
                                                       $$ = buf;
                                                     }
-                     | tNOT relational_expression { $$ = "bne"; }
+                     | tNOT relational_expression { $$ = "bne"; } // TODO: not working :)
                      | math_expression relation_operator math_expression { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                            /*int tmpAddrTerm = peek();*/
                                                                            writeAsmLine("pop r1");
@@ -158,7 +158,6 @@ and_or_op: tAND { $$ = "mul"; }
          | tOR { $$ = "add"; }
          ;
 
-//TODO parenthesis/priority in maths
 math_expression: 
     math_expression math_add_op math_expression %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                /*int tmpAddrTerm = peek();*/
