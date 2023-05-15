@@ -13,7 +13,7 @@ clean:
 	rm c_lang c_lang.tab.c lex.yy.c c_lang.tab.h c_lang.output pythonDict.py
 
 test: all
-	#./c_lang ./test/output_math.s pythonDict.py < test/test_math.c
+	./c_lang ./test/output_math.s pythonDict.py < test/test_math.c
 
 	./c_lang ./test/output_if.s pythonDict.py < test/test_if.c
 	python3 ./branching.py ./test/output_if.s

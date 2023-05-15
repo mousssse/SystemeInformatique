@@ -20,7 +20,7 @@
   char * str;
 }
 
-%type <str> math_operator
+%type <str> math_add_op math_mul_op
 %type <str> relation_operator
 %type <str> and_or_op
 %type <str> relational_expression
@@ -72,7 +72,7 @@ expression_statement: tSEMI { printf("empty expression\n"); }
 
 expression: assignment_expression
           | tINT declaration_expression
-          | relational_expression
+          //| relational_expression
           ;
 
 block_statement: tLBRACE tRBRACE { printf("empty block\n"); }
@@ -113,12 +113,12 @@ int_list: tINT tID { printf("int_list %s\n", $2); free($2); }
         | int_list tCOMMA tINT tID  { free($4); }
         ;
 
-relational_expression: math_expression { /*int tmpAddrArg = peek();*/
-                                         char buf[256];
-                                         sprintf(buf, "beq");
-                                         printf("%s\n", buf);
-                                         $$ = buf;
-                                       }
+relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();*/
+                                                      char buf[256];
+                                                      sprintf(buf, "beq");
+                                                      printf("%s\n", buf);
+                                                      $$ = buf;
+                                                    }
                      | tNOT relational_expression { $$ = "bne"; }
                      | math_expression relation_operator math_expression { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                            /*int tmpAddrTerm = peek();*/
@@ -159,33 +159,58 @@ and_or_op: tAND { $$ = "mul"; }
          ;
 
 //TODO parenthesis/priority in maths
-math_expression: term
-              | math_expression math_operator math_expression  %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
-                                                                              /*int tmpAddrTerm = peek();*/
-                                                                              writeAsmLine("pop r1");
-                                                                              incrementCounter(2);
+math_expression: 
+    math_expression math_add_op math_expression %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
+                                                                /*int tmpAddrTerm = peek();*/
+                                                               writeAsmLine("pop r1");
+                                                               incrementCounter(2);
 
-                                                                              writeAsmLine("pop r0");
-                                                                              incrementCounter(2);
+                                                               writeAsmLine("pop r0");
+                                                               incrementCounter(2);
 
-                                                                              char buf[256];
-                                                                              sprintf(buf, "%s r0 r0 r1", $2);
-                                                                              writeAsmLine(buf);
-                                                                              incrementCounter(4);
-                                                                              writeAsmLine("push r0");
-                                                                              incrementCounter(1 + ADDRESS_SIZE);
-                                                                            }
-              | tLPAR relational_expression tRPAR
-              ;
+                                                               char buf[256];
+                                                               sprintf(buf, "%s r0 r0 r1", $2);
+                                                               writeAsmLine(buf);
+                                                               incrementCounter(4);
+                                                               writeAsmLine("push r0");
+                                                               incrementCounter(1 + ADDRESS_SIZE);
+                                                             }
+  | multiplicative_expression
+  ;
 
-math_operator: tADD { $$ = "add"; }
-             | tSUB { $$ = "sub"; }
-             | tMUL { $$ = "mul"; }
-             | tDIV { $$ = "div"; }
-             ;
+multiplicative_expression:
+    multiplicative_expression math_mul_op multiplicative_expression %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
+                                                                                   /*int tmpAddrTerm = peek();*/
+                                                                                   writeAsmLine("pop r1");
+                                                                                   incrementCounter(2);
+
+                                                                                   writeAsmLine("pop r0");
+                                                                                   incrementCounter(2);
+
+                                                                                   char buf[256];
+                                                                                   sprintf(buf, "%s r0 r0 r1", $2);
+                                                                                   writeAsmLine(buf);
+                                                                                   incrementCounter(4);
+                                                                                   writeAsmLine("push r0");
+                                                                                   incrementCounter(1 + ADDRESS_SIZE);
+                                                                                 }
+  | term
+  ;
+
+math_add_op: 
+    tADD { $$ = "add"; }
+  | tSUB { $$ = "sub"; }
+  ;
+
+math_mul_op:
+    tMUL { $$ = "mul"; }
+  | tDIV { $$ = "div"; }
+  ;
 
 term: tID %prec tEMPTY { if (isInit($1) == 0) {fprintf(stderr, "warning: variable %s hasn't been initialised\n", $1);} /*int addr =*/ createTmpVar(0); printf("Tmp var created for %s\n", $1); char buf[256]; sprintf(buf, "ldr r0 bp%%%d (%s)", getShift($1), $1); writeAsmLine(buf); incrementCounter(3); writeAsmLine("push r0"); incrementCounter(1 + ADDRESS_SIZE); free($1); }
     | tNB { int addr = createTmpVar(0); printf("Tmp var created for '%d'\n", $1); char buf[256]; sprintf(buf, "push #%d (%d)", $1, addr); writeAsmLine(buf); incrementCounter(1 + ADDRESS_SIZE); }
+    | tLPAR math_expression tRPAR
+    | tLPAR relational_expression tRPAR
     | unary_expression {printf("unary\n");}
     | function_call { printf("f call\n");}
     ;
