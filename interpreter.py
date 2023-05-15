@@ -3,7 +3,7 @@ import sys
 instructions = {}
 
 #asmFilename = sys.argv[1]
-asmFilename = './test/output_if.S'
+asmFilename = './test/output_function.s'
 with open(asmFilename, 'r') as file:
     inMain = False
     for line in file.readlines():

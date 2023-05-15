@@ -88,7 +88,7 @@ if_condition: tLPAR relational_expression tRPAR { char* branch = strdup($2); wri
 while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE tLPAR relational_expression tRPAR { writeAsmLine("pop r0"); incrementCounter(2); writeAsmLine("cmp r0 #0"); incrementCounter(3); char buf[256]; sprintf(buf, "%s .else", $4); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(1 + ADDRESS_SIZE); newLine(); } block_statement { char buf[256]; sprintf(buf, "b 0x%.*X", ADDRESS_SIZE, $<num>0); writeAsmLine(buf); newLine(); incrementCounter(1 + ADDRESS_SIZE); setJumpAddress($<num>2);  }
                ;
 
-return_statement: tRETURN tSEMI { writeAsmLine("mov r0 #0"); incrementCounter(3); printf("returning void\n"); }
+return_statement: tRETURN tSEMI { writeAsmLine("mov r0 #0"); incrementCounter(2 + ADDRESS_SIZE); printf("returning void\n"); }
                 | tRETURN math_expression tSEMI { writeAsmLine("pop r0"); incrementCounter(2); printf("returning an expression\n"); }
                 ;
 
@@ -161,7 +161,7 @@ and_or_op: tAND { $$ = "mul"; }
 //TODO parenthesis/priority in maths
 math_expression: 
     math_expression math_add_op math_expression %prec tEMPTY { /*int tmpAddrArg =*/ deleteTmpVar();
-                                                                /*int tmpAddrTerm = peek();*/
+                                                               /*int tmpAddrTerm = peek();*/
                                                                writeAsmLine("pop r1");
                                                                incrementCounter(2);
 
@@ -233,6 +233,8 @@ function_call: tID tLPAR term_list tRPAR { char buf[256];
                                            sprintf(buf, "add bp bp #%d", nbVar);
                                            writeAsmLine(buf);
                                            incrementCounter(4);
+                                           writeAsmLine("push r0");
+                                           incrementCounter(1 + ADDRESS_SIZE);
                                            free($1);
                                          }
              | tID tLPAR tRPAR { char buf[256];

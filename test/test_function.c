@@ -1,9 +1,7 @@
 int res(int a) {
-    int a = 3;
-    int c = 2;
+    return 7;
 }
 
 int main(void) {
-    int a = res(2);
-    int b = a + 4;
+    int a = res(2) + 3;
 }
