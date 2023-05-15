@@ -3,7 +3,7 @@ import sys
 instructions = {}
 
 #asmFilename = sys.argv[1]
-asmFilename = './test/output_function.s'
+asmFilename = './test/output_if.s'
 with open(asmFilename, 'r') as file:
     inMain = False
     for line in file.readlines():
@@ -79,19 +79,26 @@ def execute_instruction(instr):
         registers[reg] = resolve_value(val)
         nextAddress += -1 + address_size
     elif op == 'cmp':
-        #TODO
-        x, y = params.split()
-        registers['flag'] = resolve_value(x) - resolve_value(y)
+        x = resolve_value(params.split()[0])
+        if (x == 0): flags['Z'] = 1
+        elif (x < 0): flags['N'] = 1
+        elif (x > 0): flags['C'] = 1
     elif op == 'b': nextAddress = resolve_value(params)
     elif op == 'beq' and flags['Z'] == 1: nextAddress = resolve_value(params)
     elif op == 'bne' and flags['Z'] != 1: nextAddress = resolve_value(params)
+    elif op == 'blt' and flags['N'] == 1: nextAddress = resolve_value(params)
+    elif op == 'bge' and flags['N'] != 1: nextAddress = resolve_value(params)
+    elif op == 'bgt' and flags['C'] == 1: nextAddress = resolve_value(params)
+    elif op == 'ble' and flags['C'] != 1: nextAddress = resolve_value(params)
+    elif op.startswith('b'): nextAddress += -1 + address_size
     else:
-        print(f"Unknown instruction: {op}")
+        print(f"Unknown instruction: '{op}'")
         return True
 
     registers['pc'] = nextAddress
     print('{' + ', '.join([f'{reg}: {hex(int(x))}' for reg, x in registers.items()]) + '}')
     print_stack(stack)
+    print(flags)
     return False
 
 def execute():
