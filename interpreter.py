@@ -53,11 +53,10 @@ def resolve_value(param):
 
 def execute_instruction(instr):
     op, params = instr.split(' ', 1)
-    nextAddress = registers['pc'] + len(instr.split())
+    nextAddress = registers['pc'] + 4
     if op == "push":
         stack[registers['sp']] = resolve_value(params)
         registers['sp'] -= 1
-        nextAddress += -1 + address_size
     elif op == 'pop':
         registers['sp'] += 1
         if params == 'pc': nextAddress = stack[registers['sp']]
@@ -77,7 +76,6 @@ def execute_instruction(instr):
     elif op == 'mov':
         reg, val = params.split()
         registers[reg] = resolve_value(val)
-        nextAddress += -1 + address_size
     elif op == 'cmp':
         x = resolve_value(params.split()[0])
         if (x == 0): flags['Z'] = 1
@@ -90,7 +88,6 @@ def execute_instruction(instr):
     elif op == 'bge' and flags['N'] != 1: nextAddress = resolve_value(params)
     elif op == 'bgt' and flags['C'] == 1: nextAddress = resolve_value(params)
     elif op == 'ble' and flags['C'] != 1: nextAddress = resolve_value(params)
-    elif op.startswith('b'): nextAddress += -1 + address_size
     else:
         print(f"Unknown instruction: '{op}'")
         return True
