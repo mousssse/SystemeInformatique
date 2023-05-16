@@ -100,7 +100,9 @@ signal mem_re_a_out : STD_LOGIC_VECTOR (7 downto 0);
 signal mem_re_op_out : STD_LOGIC_VECTOR (7 downto 0);
 signal mem_re_b_out : STD_LOGIC_VECTOR (7 downto 0);
 
-
+-- op identifiers
+constant AFC : STD_LOGIC_VECTOR := x"06";
+constant COP : STD_LOGIC_VECTOR := x"05";
 
 
 begin
@@ -118,11 +120,14 @@ begin
             li_di_b_out <= out_ins (23 downto 16);
             li_di_c_out <= out_ins (31 downto 24);
             
-            -- if (li_di_op_out = x"06") then --if AFC or COP, move later (just a reminder)
             -- register bank pipeline propagation (2nd floor)
             di_ex_a_out <= li_di_a_out;
-            di_ex_op_out <= li_di_a_out;
-            di_ex_b_out <= li_di_b_out;
+            di_ex_op_out <= li_di_op_out;
+            if (li_di_op_out = AFC) then
+                di_ex_b_out <= li_di_b_out;
+            else
+                di_ex_b_out <= qa;
+            end if;    
             
             -- ALU pipeline propagation (3rd floor)
             ex_mem_a_out <= di_ex_a_out;
@@ -131,8 +136,7 @@ begin
             
             -- data memory pipeline propagation (4th floor)
             mem_re_a_out <= ex_mem_a_out;
-            mem_re_op_out <= ex_mem_op_out;
+            mem_re_op_out <= ex_mem_op_out; -- TODO : LC then U2 afc
             mem_re_b_out <= ex_mem_b_out;
-            --end if;
     end process;
 end struct; 
