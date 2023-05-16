@@ -1,2 +1,6 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd" into library xil_defaultlib
-INFO: [VRFC 10-307] analyzing entity ALU
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity DM
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity IM
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity REG

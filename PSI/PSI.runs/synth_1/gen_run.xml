@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1683798565">
+<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1684221494">
   <File Type="VDS-TIMING-PB" Name="ALU_timing_summary_synth.pb"/>
   <File Type="VDS-TIMINGSUMMARY" Name="ALU_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="ALU.dcp"/>
@@ -19,14 +19,21 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PSRCDIR/sources_1/new/MB.vhd">
+    <File Path="$PSRCDIR/sources_1/new/REG.vhd">
       <FileInfo>
         <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PSRCDIR/sources_1/new/REG.vhd">
+    <File Path="$PSRCDIR/sources_1/new/DM.vhd">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/IM.vhd">
       <FileInfo>
         <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
