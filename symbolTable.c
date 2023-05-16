@@ -160,6 +160,20 @@ int delVarFromList() {
     return count;
 }
 
+void clearTable() {
+    symbolList * toDelete = symList;
+    symList = NULL;
+    while (toDelete != NULL && toDelete->sym != NULL) {
+        symbolList* next = toDelete->next;
+        if (*toDelete->sym->name != 0) {
+            free(toDelete->sym->name);
+        }
+        free(toDelete->sym);
+        free(toDelete);
+        toDelete = next;
+    }
+}
+
 int nbVarInTable() {
     showSymTable("NB CALL");
     int nbVar = 0;
@@ -224,15 +238,15 @@ int deleteTmpVar() {
     shift = listAux->sym->shift;
     free(listAux->sym);
     free(listAux);
-    showSymTable("after pop");
+    showSymTable("after free tmp");
     return shift;
 }
 
 void showFunTable(char* info) {
     functionList * listAux = funList;
-    printf("FORMAT {name, addr} \t FUN TABLE %s: ", info);
+    printf("FORMAT {name, addr, nbArg} \t FUN TABLE %s: ", info);
     while(listAux != NULL && listAux->fun != NULL) {
-        printf("{%s, 0x%.*X} ", listAux->fun->name, 2 * ADDRESS_SIZE, listAux->fun->addr);
+        printf("{%s, 0x%.*X, %d} ", listAux->fun->name, 2 * ADDRESS_SIZE, listAux->fun->addr, listAux->fun->nbArg);
         listAux = (functionList*) listAux->next;
     }
     printf("\n");
@@ -249,7 +263,7 @@ int funInTable(char * name) {
     return 0;
 }
 
-void addFunToList(char * name, int addr, int nbArg) {
+void addFunToList(char * name, int addr) {
     if (funInTable(name)) {
         // function already exists
         fprintf(stderr, "error: redefinition of ‘%s’\n", name);
@@ -259,7 +273,7 @@ void addFunToList(char * name, int addr, int nbArg) {
         functionList * listAux = funList;
         
         function * funPtr = (function*) malloc(sizeof(function));
-        function newFun = {name, addr, nbArg};
+        function newFun = {name, addr, 0};
         *funPtr = newFun;
 
         if (funList == NULL) {
@@ -277,6 +291,18 @@ void addFunToList(char * name, int addr, int nbArg) {
         }
         showFunTable("after Add");
     }
+}
+
+void setFunNbArg(char * name, int nbArg) {
+    functionList * listAux = funList;
+    while(listAux != NULL) {
+        if ((listAux->fun != NULL) && (strcmp(listAux->fun->name, name) == 0)) {
+            listAux->fun->nbArg = nbArg;
+            break;
+        }
+        listAux = listAux->next;
+    }
+    showFunTable("after set");
 }
 
 int getFunAddr(char * name, int nbArg) {

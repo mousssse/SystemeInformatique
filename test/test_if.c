@@ -18,6 +18,6 @@ int main(void) {
 
 void res(int a) {
     int a = 0;
-    int b = main(3) + 1;
+    int b = main() + 1;
     int c = 2;
 }

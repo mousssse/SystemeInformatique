@@ -3,7 +3,7 @@ import sys
 instructions = {}
 
 #asmFilename = sys.argv[1]
-asmFilename = './test/output_if.s'
+asmFilename = './test/output_function.s'
 with open(asmFilename, 'r') as file:
     inMain = False
     for line in file.readlines():
@@ -60,8 +60,8 @@ def execute_instruction(instr):
         nextAddress += -1 + address_size
     elif op == 'pop':
         registers['sp'] += 1
-        registers[params] = stack[registers['sp']]
         if params == 'pc': nextAddress = stack[registers['sp']]
+        else: registers[params] = stack[registers['sp']]
     elif op == 'add':
         res, x, y = params.split()
         registers[res] = resolve_value(x) + resolve_value(y)
@@ -103,7 +103,6 @@ def execute_instruction(instr):
 
 def execute():
     while True:
-        #print(instructions[registers['pc']])
         error = execute_instruction(instructions[registers['pc']])
         if error: break
 

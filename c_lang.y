@@ -24,7 +24,9 @@
 %type <str> relation_operator
 %type <str> and_or_op
 %type <str> relational_expression
+%type <str> function_type
 %type <num> if_condition
+%type <num> int_list term_list
 
 %token <str> tID
 %token <num> tNB
@@ -101,16 +103,16 @@ declaration_expression: tID { writeAsmLine("sub sp sp #1"); incrementCounter(4);
 assignment_expression: tID tASSIGN math_expression { deleteTmpVar(); init($1); writeAsmLine("pop r0"); incrementCounter(2); int addr = getShift($1); char buf[256]; sprintf(buf, "str r0 bp%%%d (%s)", addr, $1); writeAsmLine(buf); incrementCounter(3); printf("assigning a value\n"); free($1); }
                      ;
 
-function_declaration: function_type tLPAR tVOID tRPAR block_statement { deleteTmpVar(); writeAsmLine("pop pc"); incrementCounter(2); newLine(); printf("function with no args\n"); }
-                    | function_type tLPAR int_list tRPAR block_statement {deleteTmpVar(); writeAsmLine("pop pc"); incrementCounter(2); newLine(); printf("function\n"); }
+function_declaration: function_type tLPAR tVOID { writeAsmLine("push lr"); createTmpVar(0); incrementCounter(1 + ADDRESS_SIZE); printf("Tmp var created for lr\n"); } tRPAR block_statement { writeAsmLine("pop pc"); incrementCounter(2); newLine(); clearTable(); printf("function with no args\n"); }
+                    | function_type tLPAR int_list { setFunNbArg($1, $3); writeAsmLine("push lr"); createTmpVar(0); incrementCounter(1 + ADDRESS_SIZE); printf("Tmp var created for lr\n"); } tRPAR block_statement { writeAsmLine("pop pc"); incrementCounter(2); newLine(); clearTable(); printf("function\n"); }
                     ;
 
-function_type: tVOID tID { addFunToList($2, getLineCounter(), 0); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); writeAsmLine("push lr"); createTmpVar(0); incrementCounter(1 + ADDRESS_SIZE); }
-             | tINT tID { addFunToList($2, getLineCounter(), 0); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); writeAsmLine("push lr"); createTmpVar(0); incrementCounter(1 + ADDRESS_SIZE); }
+function_type: tVOID tID { addFunToList($2, getLineCounter()); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); $$ = $2; }
+             | tINT tID { addFunToList($2, getLineCounter()); char buf[256]; sprintf(buf, ".%s", $2); writeLabel(buf); $$ = $2; }
              ;
 
-int_list: tINT tID { printf("int_list %s\n", $2); free($2); }
-        | int_list tCOMMA tINT tID  { free($4); }
+int_list: tINT tID { $$ = 1; printf("int_list %s\n", $2); addVarToList($2, 1, 0); }
+        | int_list tCOMMA tINT tID  { $$ = $1 + 1; addVarToList($4, 1, 0); }
         ;
 
 relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();*/
@@ -219,22 +221,31 @@ unary_expression: tSUB term { printf("unary sub\n"); }
                 ;
 
 function_call: tID tLPAR term_list tRPAR { char buf[256];
-                                           int nbVar = nbVarInTable();
+                                           int nbVar = nbVarInTable() - $3;
                                            sprintf(buf, "sub bp bp #%d", nbVar);
                                            writeAsmLine(buf);
                                            incrementCounter(4);
                                            sprintf(buf, "mov lr 0x%.*X", 2 * ADDRESS_SIZE, getLineCounter() + 2 + ADDRESS_SIZE + 1 + ADDRESS_SIZE);
                                            writeAsmLine(buf); 
                                            incrementCounter(2 + ADDRESS_SIZE);
-                                           sprintf(buf, "b 0x%.*X", 2 * ADDRESS_SIZE, getFunAddr($1, 0));
+                                           sprintf(buf, "b 0x%.*X", 2 * ADDRESS_SIZE, getFunAddr($1, $3));
                                            writeAsmLine(buf);
                                            incrementCounter(1 + ADDRESS_SIZE);
                                            sprintf(buf, "add bp bp #%d", nbVar);
                                            writeAsmLine(buf);
                                            incrementCounter(4);
+                                           sprintf(buf, "add sp sp #%d", $3);
+                                           writeAsmLine(buf);
+                                           incrementCounter(4);
                                            writeAsmLine("push r0");
                                            incrementCounter(1 + ADDRESS_SIZE);
                                            free($1);
+
+                                           createTmpVar(0);
+
+                                           for (int i = 0; i < $3; i++) {
+                                              deleteTmpVar();
+                                           }
                                          }
              | tID tLPAR tRPAR { char buf[256];
                                  int nbVar = nbVarInTable();
@@ -255,8 +266,8 @@ function_call: tID tLPAR term_list tRPAR { char buf[256];
              | tPRINT tLPAR term_list tRPAR { writeAsmLine("bl .print"); incrementCounter(1 + ADDRESS_SIZE); printf("print!\n"); }
              ;
 
-term_list: math_expression
-         | term_list tCOMMA math_expression
+term_list: math_expression { $$ = 1; }
+         | term_list tCOMMA math_expression { $$ = $1 + 1; }
          ;
 
 %%
