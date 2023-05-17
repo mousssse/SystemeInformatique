@@ -1,14 +1,14 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: INSA Toulouse
+-- Engineer: Sarah Mousset & Valentin Guittard
 -- 
--- Create Date: 11.05.2023 10:05:37
+-- Create Date: 16.05.2023 09:48:23
 -- Design Name: 
--- Module Name: MB - Behavioral
--- Project Name: 
--- Target Devices: 
+-- Module Name: IM - Behavioral
+-- Project Name: PSI
+-- Target Devices: FPGA Basys 3
 -- Tool Versions: 
--- Description: 
+-- Description: This source gives the code corresponding to the design of an instruction memory.
 -- 
 -- Dependencies: 
 -- 
@@ -19,18 +19,10 @@
 ----------------------------------------------------------------------------------
 
 
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity IM is
     Port ( CLK : in STD_LOGIC; 

@@ -1,14 +1,14 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: INSA Toulouse
+-- Engineer: Sarah Mousset & Valentin Guittard
 -- 
--- Create Date: 10.05.2023 11:08:27
+-- Create Date: 16.05.2023 09:48:23
 -- Design Name: 
 -- Module Name: REG - Behavioral
--- Project Name: 
--- Target Devices: 
+-- Project Name: PSI
+-- Target Devices: FPGA Basys 3
 -- Tool Versions: 
--- Description: 
+-- Description: This source gives the code corresponding to the design of a register bench.
 -- 
 -- Dependencies: 
 -- 
@@ -21,16 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.numeric_std.ALL; 
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+use IEEE.NUMERIC_STD.ALL; 
 
 entity REG is
     Port ( AddrA : in STD_LOGIC_VECTOR (3 downto 0); -- 

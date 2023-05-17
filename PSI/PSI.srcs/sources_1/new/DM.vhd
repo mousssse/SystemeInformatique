@@ -1,14 +1,14 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: INSA Toulouse
+-- Engineer: Sarah Mousset & Valentin Guittard
 -- 
--- Create Date: 11.05.2023 10:05:37
+-- Create Date: 16.05.2023 09:48:23
 -- Design Name: 
--- Module Name: MB - Behavioral
--- Project Name: 
--- Target Devices: 
+-- Module Name: DM - Behavioral
+-- Project Name: PSI
+-- Target Devices: FPGA Basys 3
 -- Tool Versions: 
--- Description: 
+-- Description: This source gives the code corresponding to the design of a data memory.
 -- 
 -- Dependencies: 
 -- 
@@ -23,18 +23,9 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity DM is
     Port ( IN_DATA : in STD_LOGIC_VECTOR (7 downto 0);
-           RW : in STD_LOGIC; -- 0 if write, 1 if read
+           RW : in STD_LOGIC; -- 1 if write
            RST : in STD_LOGIC;
            CLK : in STD_LOGIC;
            OUT_DATA : out STD_LOGIC_VECTOR (7 downto 0);
@@ -51,9 +42,9 @@ begin
             if (RST='1') then
                 data <= (others =>x"00");
             end if;
-            if (RW='0') then
+            if (RW='1') then
                 data(to_integer(unsigned(ADDR_DATA))) <= IN_DATA;
-            elsif (RW='1') then
+            elsif (RW='0') then
                 OUT_DATA <= data(to_integer(unsigned(ADDR_DATA)));                   
             end if;
     end process;

@@ -1,14 +1,14 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: INSA Toulouse
+-- Engineer: Sarah Mousset & Valentin Guittard
 -- 
--- Create Date: 10.05.2023 09:52:32
+-- Create Date: 16.05.2023 09:48:23
 -- Design Name: 
 -- Module Name: ALU - Behavioral
--- Project Name: 
--- Target Devices: 
+-- Project Name: PSI
+-- Target Devices: FPGA Basys 3
 -- Tool Versions: 
--- Description: 
+-- Description: This source gives the code corresponding to the design of an arithmetics logic unit.
 -- 
 -- Dependencies: 
 -- 
@@ -19,24 +19,16 @@
 ----------------------------------------------------------------------------------
 
 
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity ALU is
     Port ( A : in STD_LOGIC_VECTOR (7 downto 0);
            B : in STD_LOGIC_VECTOR (7 downto 0);
-           Ctrl_Alu : in STD_LOGIC_VECTOR (2 downto 0);
+           Ctrl_Alu : in STD_LOGIC_VECTOR (1 downto 0); --initially 2 downto 0
            S : out STD_LOGIC_VECTOR (7 downto 0);
            N : out STD_LOGIC;
            O : out STD_LOGIC;
@@ -48,10 +40,10 @@ architecture Behavioral of ALU is
     signal aux: STD_LOGIC_VECTOR (15 downto 0);
 begin
     aux <=
-        (x"00"&A) + (x"00"&B) when Ctrl_Alu="001" else
-        (x"00"&A) - (x"00"&B) when Ctrl_Alu="011" else
-        A * B when Ctrl_Alu="010" else
-        x"0000";
+        (x"00"&A) + (x"00"&B) when Ctrl_Alu="01" else
+        (x"00"&A) - (x"00"&B) when Ctrl_Alu="11" else
+        A * B when Ctrl_Alu="10" else
+        x"0000"; -- TODO : take care of other cases
     S <= aux(7 downto 0);
     N <= '1' when aux(15)='1';
     O <= '1' when aux(15 downto 8) /= x"00";
