@@ -63,9 +63,6 @@ architecture Behavioral of ALU_Test is
     
    signal ite : integer;
    
-   -- Clock period definitions
-   constant Clock_period : time := 10 ns;
-   
 begin
 
 testALU: ALU_Test PORT MAP (
@@ -79,12 +76,6 @@ testALU: ALU_Test PORT MAP (
           C => C
 );
 
--- Clock process definitions
-Clock_process : process
-begin
-Clk_Test <= not(Clk_Test);
-wait for Clock_period/2;
-end process;
 A <= x"10";
 B <= x"01";
 Ctrl_Alu <= x"000" after 0 ns, x"001" after 20 ns, x"010" after 40 ns;
