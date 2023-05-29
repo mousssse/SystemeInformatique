@@ -7,7 +7,7 @@
   #include <string.h>
 
   int currentDepth = 0;
-  int lineNumber = 0;
+  int lineNumber = 1;
 %}
 
 %code provides {

@@ -34,7 +34,7 @@ hex 0x[0-9A-Fa-f]+
 [\n] { lineNumber++; }
 [ \t\r] { /* ignore whitespace */ }
 "//".* { /* ignore single-line comments */ { printf("comment\n"); } }
-"/*"([^*]|\n|(\*+[^*/]))*"*/" { /* ignore multiline comments */ { printf("multiline comment\n"); } }
+"/*"([^*]*\*+)*"/" { /* ignore multiline comments */ { printf("multiline comment\n"); } }
 
 "+" { return tADD; }
 "-" { return tSUB; }
@@ -58,4 +58,4 @@ hex 0x[0-9A-Fa-f]+
 ";" { return tSEMI; }
 "," { return tCOMMA; }
 
-. { fprintf(stderr, "Invalid character: %s\n", yytext); }
+. { fprintf(stderr, "Invalid character on line %d: %s\n", lineNumber, yytext); }
