@@ -124,7 +124,10 @@ relational_expression: math_expression %prec tEMPTY { if (!isRelational) {
                                                     }
                      | tNOT relational_expression { writeAsmLine("pop r0");
                                                     incrementCounter(INSTR_SIZE);
-                                                    relationTo1Or0("bne");
+                                                    writeAsmLine("sub r0 #1 r0");
+                                                    incrementCounter(INSTR_SIZE);
+                                                    writeAsmLine("push r0");
+                                                    incrementCounter(INSTR_SIZE);
                                                   }
                      | math_expression relation_operator math_expression { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                            /*int tmpAddrTerm = peek();*/
