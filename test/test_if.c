@@ -1,6 +1,6 @@
 int main(void) {
     int b;
-    b = 4;
+    b = 4 + (3 > 2);
     int a = 0 + 2 + b;
     if (!(b == a)) {
         int a = 2;

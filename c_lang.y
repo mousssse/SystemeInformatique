@@ -8,9 +8,11 @@
 
   int currentDepth = 0;
   int lineNumber = 1;
+  int isRelational = 0;
 %}
 
 %code provides {
+  void relationTo1Or0(char* op);
   int yylex (void);
   void yyerror (const char *);
 }
@@ -23,7 +25,6 @@
 %type <str> math_add_op math_mul_op
 %type <str> relation_operator
 %type <str> and_or_op
-%type <str> relational_expression
 %type <str> function_type
 %type <num> if_condition
 %type <num> int_list term_list
@@ -85,9 +86,9 @@ if_statement: tIF if_condition block_statement %prec THEN { newLine(); printf("i
             | tIF if_condition block_statement tELSE { addBranching($2); writeAsmLine("b .both"); $<num>4 = getLineCounter(); addBranching($<num>4); incrementCounter(INSTR_SIZE); newLine(); printf("if/else\n"); setJumpAddress($2); } block_statement { newLine(); setJumpAddress($<num>4); }
             ;
 
-if_condition: tLPAR relational_expression tRPAR { char* branch = strdup($2); writeAsmLine("pop r0"); incrementCounter(INSTR_SIZE); char buf[256]; sprintf(buf, "cmp r0 #0"); writeAsmLine(buf); incrementCounter(INSTR_SIZE); sprintf(buf, "%s .else", branch); writeAsmLine(buf); $$ = getLineCounter(); incrementCounter(INSTR_SIZE); free(branch); }
+if_condition: tLPAR relational_expression tRPAR { writeAsmLine("pop r0"); incrementCounter(INSTR_SIZE); writeAsmLine("cmp r0 #0"); incrementCounter(INSTR_SIZE); writeAsmLine("beq .else"); $$ = getLineCounter(); incrementCounter(INSTR_SIZE); }
 
-while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE tLPAR relational_expression tRPAR { writeAsmLine("pop r0"); incrementCounter(INSTR_SIZE); writeAsmLine("cmp r0 #0"); incrementCounter(INSTR_SIZE); char buf[256]; sprintf(buf, "%s .else", $4); writeAsmLine(buf); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(INSTR_SIZE); newLine(); } block_statement { char buf[256]; sprintf(buf, "b 0x%.*X", ADDRESS_SIZE, $<num>0); writeAsmLine(buf); newLine(); incrementCounter(INSTR_SIZE); setJumpAddress($<num>2);  }
+while_statement: { $<num>0 = getLineCounter(); newLine(); } tWHILE tLPAR relational_expression tRPAR { writeAsmLine("pop r0"); incrementCounter(INSTR_SIZE); writeAsmLine("cmp r0 #0"); incrementCounter(INSTR_SIZE); writeAsmLine("beq .else"); addBranching(getLineCounter()); $<num>2 = getLineCounter(); incrementCounter(INSTR_SIZE); newLine(); } block_statement { char buf[256]; sprintf(buf, "b 0x%.*X", 2 * ADDRESS_SIZE, $<num>0); writeAsmLine(buf); newLine(); incrementCounter(INSTR_SIZE); setJumpAddress($<num>2);  }
                ;
 
 return_statement: tRETURN tSEMI { writeAsmLine("mov r0 #0"); incrementCounter(INSTR_SIZE); printf("returning void\n"); }
@@ -115,18 +116,15 @@ int_list: tINT tID { $$ = 1; printf("int_list %s\n", $2); addVarToList($2, 1, 0)
         | int_list tCOMMA tINT tID  { $$ = $1 + 1; addVarToList($4, 1, 0); }
         ;
 
-relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();*/
-                                                      char buf[256];
-                                                      sprintf(buf, "bne");
-                                                      printf("%s\n", buf);
-                                                      $$ = buf;
+relational_expression: math_expression %prec tEMPTY { if (!isRelational) {
+                                                        writeAsmLine("pop r0");
+                                                        incrementCounter(INSTR_SIZE);
+                                                        relationTo1Or0("beq");
+                                                      }
                                                     }
-                     | tNOT relational_expression { if (strcmp($2, "beq") == 0) { $$ = "bne"; }
-                                                    else if (strcmp($2, "bne") == 0) { $$ = "beq"; }
-                                                    else if (strcmp($2, "bge") == 0) { $$ = "blt"; }
-                                                    else if (strcmp($2, "blt") == 0) { $$ = "bge"; }
-                                                    else if (strcmp($2, "bgt") == 0) { $$ = "ble"; }
-                                                    else if (strcmp($2, "ble") == 0) { $$ = "bgt"; } 
+                     | tNOT relational_expression { writeAsmLine("pop r0");
+                                                    incrementCounter(INSTR_SIZE);
+                                                    relationTo1Or0("bne");
                                                   }
                      | math_expression relation_operator math_expression { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                            /*int tmpAddrTerm = peek();*/
@@ -136,9 +134,7 @@ relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();
                                                                            incrementCounter(INSTR_SIZE);
                                                                            writeAsmLine("sub r0 r0 r1");
                                                                            incrementCounter(INSTR_SIZE);
-                                                                           writeAsmLine("push r0");
-                                                                           incrementCounter(INSTR_SIZE);
-                                                                           $$ = $2;
+                                                                           relationTo1Or0($2);
                                                                          }
                      | relational_expression and_or_op relational_expression %prec tEMPTY { writeAsmLine("pop r1");
                                                                                             incrementCounter(INSTR_SIZE);
@@ -148,11 +144,8 @@ relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();
                                                                                             sprintf(buf, "%s r0 r0 r1", $2);
                                                                                             writeAsmLine(buf);
                                                                                             incrementCounter(INSTR_SIZE);
-                                                                                            writeAsmLine("push r0");
-                                                                                            incrementCounter(INSTR_SIZE);
-                                                                                            $$ = "beq"; 
+                                                                                            relationTo1Or0("beq");
                                                                                           }
-                     | tLPAR relational_expression tRPAR { $$ = $2; }
                      ;
 
 relation_operator: tLT { $$ = "bge"; }
@@ -215,11 +208,12 @@ math_mul_op:
   | tDIV { $$ = "div"; }
   ;
 
-term: tID %prec tEMPTY { if (isInit($1) == 0) {fprintf(stderr, "warning: variable %s hasn't been initialised\n", $1);} /*int addr =*/ createTmpVar(0); printf("Tmp var created for %s\n", $1); char buf[256]; sprintf(buf, "ldr r0 bp%%%d (%s)", getShift($1), $1); writeAsmLine(buf); incrementCounter(INSTR_SIZE); writeAsmLine("push r0"); incrementCounter(INSTR_SIZE); free($1); }
-    | tNB { int addr = createTmpVar(0); printf("Tmp var created for '%d'\n", $1); char buf[256]; sprintf(buf, "push #%d (%d)", $1, addr); writeAsmLine(buf); incrementCounter(INSTR_SIZE); }
-    | tLPAR math_expression tRPAR
-    | unary_expression {printf("unary\n");}
-    | function_call { printf("f call\n");}
+term: tID %prec tEMPTY { if (isInit($1) == 0) {fprintf(stderr, "warning: variable %s hasn't been initialised\n", $1);} /*int addr =*/ createTmpVar(0); printf("Tmp var created for %s\n", $1); char buf[256]; sprintf(buf, "ldr r0 bp%%%d (%s)", getShift($1), $1); writeAsmLine(buf); incrementCounter(INSTR_SIZE); writeAsmLine("push r0"); incrementCounter(INSTR_SIZE); free($1); isRelational = 0; }
+    | tNB { int addr = createTmpVar(0); printf("Tmp var created for '%d'\n", $1); char buf[256]; sprintf(buf, "push #%d (%d)", $1, addr); writeAsmLine(buf); incrementCounter(INSTR_SIZE); isRelational = 0; }
+    | tLPAR math_expression tRPAR { isRelational = 0; }
+    | tLPAR relational_expression tRPAR { isRelational = 1; }
+    | unary_expression {printf("unary\n"); isRelational = 0; }
+    | function_call { printf("f call\n"); isRelational = 0; }
     ;
 
 unary_expression: tSUB term { printf("unary sub\n"); }
@@ -277,6 +271,21 @@ term_list: math_expression { $$ = 1; }
          ;
 
 %%
+
+void relationTo1Or0(char* op) {
+  writeAsmLine("mov r1 #0");
+  incrementCounter(INSTR_SIZE);
+  writeAsmLine("cmp r0 #0");
+  incrementCounter(INSTR_SIZE);
+  char buf[256];
+  sprintf(buf, "%s 0x%.*X", op, 2 * ADDRESS_SIZE, getLineCounter() + 2*INSTR_SIZE);
+  writeAsmLine(buf);
+  incrementCounter(INSTR_SIZE);
+  writeAsmLine("mov r1 #1");
+  incrementCounter(INSTR_SIZE);
+  writeAsmLine("push r1");
+  incrementCounter(INSTR_SIZE);
+}
 
 void yyerror(const char *msg) {
   fprintf(stderr, "error: %s\n", msg);
