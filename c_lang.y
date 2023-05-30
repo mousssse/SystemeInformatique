@@ -121,7 +121,13 @@ relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();
                                                       printf("%s\n", buf);
                                                       $$ = buf;
                                                     }
-                     | tNOT relational_expression { $$ = "bne"; } // TODO: not working :)
+                     | tNOT relational_expression { if (strcmp($2, "beq") == 0) { $$ = "bne"; }
+                                                    else if (strcmp($2, "bne") == 0) { $$ = "beq"; }
+                                                    else if (strcmp($2, "bge") == 0) { $$ = "blt"; }
+                                                    else if (strcmp($2, "blt") == 0) { $$ = "bge"; }
+                                                    else if (strcmp($2, "bgt") == 0) { $$ = "ble"; }
+                                                    else if (strcmp($2, "ble") == 0) { $$ = "bgt"; } 
+                                                  }
                      | math_expression relation_operator math_expression { /*int tmpAddrArg =*/ deleteTmpVar();
                                                                            /*int tmpAddrTerm = peek();*/
                                                                            writeAsmLine("pop r1");
@@ -146,6 +152,7 @@ relational_expression: math_expression %prec tEMPTY { /*int tmpAddrArg = peek();
                                                                                             incrementCounter(INSTR_SIZE);
                                                                                             $$ = "beq"; 
                                                                                           }
+                     | tLPAR relational_expression tRPAR { $$ = $2; }
                      ;
 
 relation_operator: tLT { $$ = "bge"; }
@@ -211,7 +218,6 @@ math_mul_op:
 term: tID %prec tEMPTY { if (isInit($1) == 0) {fprintf(stderr, "warning: variable %s hasn't been initialised\n", $1);} /*int addr =*/ createTmpVar(0); printf("Tmp var created for %s\n", $1); char buf[256]; sprintf(buf, "ldr r0 bp%%%d (%s)", getShift($1), $1); writeAsmLine(buf); incrementCounter(INSTR_SIZE); writeAsmLine("push r0"); incrementCounter(INSTR_SIZE); free($1); }
     | tNB { int addr = createTmpVar(0); printf("Tmp var created for '%d'\n", $1); char buf[256]; sprintf(buf, "push #%d (%d)", $1, addr); writeAsmLine(buf); incrementCounter(INSTR_SIZE); }
     | tLPAR math_expression tRPAR
-    | tLPAR relational_expression tRPAR
     | unary_expression {printf("unary\n");}
     | function_call { printf("f call\n");}
     ;
