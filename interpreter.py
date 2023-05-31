@@ -3,7 +3,7 @@ import sys
 instructions = {}
 
 #asmFilename = sys.argv[1]
-asmFilename = './test/output_math.s'
+asmFilename = './test/output_if.s'
 with open(asmFilename, 'r') as file:
     inMain = False
     for line in file.readlines():
@@ -53,8 +53,11 @@ def resolve_value(param):
 
 def update_flags(x):
     if (x == 0): flags['Z'] = 1
-    elif (x < 0): flags['N'] = 1
-    elif (x > 0): flags['C'] = 1
+    else: flags['Z'] = 0
+    if (x < 0): flags['N'] = 1
+    else: flags['N'] = 0
+    if (x > 255): flags['C'] = 1
+    else: flags['C'] = 0
 
 def execute_instruction(instr):
     print(instr)
@@ -90,13 +93,14 @@ def execute_instruction(instr):
     elif op == 'afc':
         reg, val = params.split()
         registers[reg] = resolve_value(val)
-    elif op == 'b': nextAddress = resolve_value(params)
-    elif op == 'beq' and flags['Z'] == 1: nextAddress = resolve_value(params)
-    elif op == 'bne' and flags['Z'] != 1: nextAddress = resolve_value(params)
-    elif op == 'blt' and flags['N'] == 1: nextAddress = resolve_value(params)
-    elif op == 'bge' and flags['N'] != 1: nextAddress = resolve_value(params)
-    elif op == 'bgt' and flags['C'] == 1: nextAddress = resolve_value(params)
-    elif op == 'ble' and flags['C'] != 1: nextAddress = resolve_value(params)
+    elif op.startswith('b'):
+        if op == 'b': nextAddress = resolve_value(params)
+        elif op == 'beq' and flags['Z'] == 1: nextAddress = resolve_value(params)
+        elif op == 'bne' and flags['Z'] != 1: nextAddress = resolve_value(params)
+        elif op == 'blt' and flags['N'] == 1: nextAddress = resolve_value(params)
+        elif op == 'bge' and flags['N'] != 1: nextAddress = resolve_value(params)
+        elif op == 'bgt' and flags['C'] == 1: nextAddress = resolve_value(params)
+        elif op == 'ble' and flags['C'] != 1: nextAddress = resolve_value(params)
     else:
         print(f"Unknown instruction: '{op}'")
         return True
