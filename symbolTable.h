@@ -2,6 +2,7 @@
 #define SYMBOLTABLE_H
 
 extern int currentDepth;
+extern int lineNumber;
 
 int isInit(char * name);
 void init(char * name);

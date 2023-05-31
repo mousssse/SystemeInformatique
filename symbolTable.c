@@ -96,7 +96,7 @@ int addVarToList(char * name, int init, int type) {
     symbol * inTable = symInTable(name);
     if (inTable != NULL && inTable->depth == currentDepth ) {
         // var already exists
-        fprintf(stderr, "error: redefinition of ‘%s’\n", name);
+        fprintf(stderr, "error: redefinition of ‘%s’, line %d\n", name, lineNumber);
         exit(1);
     }
     else {
@@ -120,7 +120,7 @@ int addVarToList(char * name, int init, int type) {
             listAux->next->next = NULL;
             listAux->next->sym = symPtr;
         }
-        showSymTable("after Add");
+        // showSymTable("after Add");
     }
     return shift;
 }
@@ -156,7 +156,7 @@ int delVarFromList() {
         free(toDelete);
         toDelete = next;
     }
-    showSymTable("after Del");
+    // showSymTable("after Del");
     return count;
 }
 
@@ -175,7 +175,7 @@ void clearTable() {
 }
 
 int nbVarInTable() {
-    showSymTable("NB CALL");
+    // showSymTable("NB CALL");
     int nbVar = 0;
     symbolList * listAux = symList;
     while(listAux != NULL && listAux->sym != NULL) {
@@ -238,7 +238,7 @@ int deleteTmpVar() {
     shift = listAux->sym->shift;
     free(listAux->sym);
     free(listAux);
-    showSymTable("after free tmp");
+    // showSymTable("after free tmp");
     return shift;
 }
 
@@ -266,7 +266,7 @@ int funInTable(char * name) {
 void addFunToList(char * name, int addr) {
     if (funInTable(name)) {
         // function already exists
-        fprintf(stderr, "error: redefinition of ‘%s’\n", name);
+        fprintf(stderr, "error: redefinition of ‘%s’, line %d\n", name, lineNumber);
         exit(1);
     }
     else {
@@ -289,7 +289,7 @@ void addFunToList(char * name, int addr) {
             listAux->next->next = NULL;
             listAux->next->fun = funPtr;
         }
-        showFunTable("after Add");
+        // showFunTable("after Add");
     }
 }
 
@@ -302,7 +302,7 @@ void setFunNbArg(char * name, int nbArg) {
         }
         listAux = listAux->next;
     }
-    showFunTable("after set");
+    // showFunTable("after set");
 }
 
 int getFunAddr(char * name, int nbArg) {
