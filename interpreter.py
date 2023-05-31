@@ -73,7 +73,11 @@ def execute_instruction(instr):
         if 'bp' in ptr: registers[res] = resolve_value(ptr)
         else: 
             registers['sp'] += 1
-            if res == 'pc': nextAddress = stack[registers['sp']]
+            if res == 'pc':
+                if registers['sp'] == registers['bp'] == stack_size - 1:
+                    print("Finished")
+                    return True
+                nextAddress = stack[registers['sp']]
             else: registers[res] = stack[registers['sp']]
     elif op == 'add':
         res, x, y = params.split()
@@ -113,8 +117,8 @@ def execute_instruction(instr):
 
 def execute():
     while True:
-        error = execute_instruction(instructions[registers['pc']])
-        if error: break
+        finished = execute_instruction(instructions[registers['pc']])
+        if finished: break
 
 # don't forget to remove the last pop pc before running
 execute()
