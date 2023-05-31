@@ -182,7 +182,6 @@ int nbVarInTable() {
         listAux = (symbolList*) listAux->next;
         nbVar++;
     }
-    printf("\n");
     return nbVar;
 }
 

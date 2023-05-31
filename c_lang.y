@@ -52,8 +52,8 @@
 %%
 
 program: 
-    function_list { printf("\n----------program parsed correctly----------\n"); }
-    | /* empty */ { printf("\n----------empty program----------\n"); }
+    function_list { printf("----------program parsed correctly----------\n\n"); }
+    | /* empty */ { printf("----------empty program----------\n\n"); }
     ;
 
 function_list: 
