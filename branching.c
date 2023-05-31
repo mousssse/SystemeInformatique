@@ -52,6 +52,9 @@ void setJumpAddress(int branchAddress) {
 
 void incrementCounter(int increment) {
     lineCounter += increment;
+    if (lineCounter > 1023) {
+        printf("warning: The code is too long for the FPGA\n");
+    }
 }
 
 int getLineCounter() {
