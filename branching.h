@@ -1,6 +1,6 @@
 #ifndef BRANCHING_H
 #define BRANCHING_H
-#define ADDRESS_SIZE 2
+#define ADDRESS_SIZE 1
 #define INSTR_SIZE 4
 
 void addBranching(int branchAddress);
