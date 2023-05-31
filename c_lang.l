@@ -33,8 +33,8 @@ hex 0x[0-9A-Fa-f]+
 
 [\n] { lineNumber++; }
 [ \t\r] { /* ignore whitespace */ }
-"//".* { /* ignore single-line comments */ printf("comment\n"); }
-\/\*([^*]*\*+[^*\/])*[^*]*\*+\/ { /* ignore multiline comments */ printf("Multiline comment\n"); printf("%s\n", yytext); }
+"//".* { /* ignore single-line comments printf("comment\n");*/ }
+\/\*([^*]*\*+[^*\/])*[^*]*\*+\/ { /* ignore multiline comments printf("Multiline comment\n"); */ }
 
 "+" { return tADD; }
 "-" { return tSUB; }
