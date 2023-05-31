@@ -17,7 +17,6 @@ proc create_report { reportName command } {
     send_msg_id runtcl-5 warning "$msg"
   }
 }
-set_msg_config -id {Common 17-41} -limit 10000000
 create_project -in_memory -part xc7a35tcpg236-1
 
 set_param project.singleFileAddWarning.threshold 0
@@ -37,6 +36,8 @@ read_vhdl -library xil_defaultlib {
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/ALU_Test.vhd
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd
+  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd
+  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

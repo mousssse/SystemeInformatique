@@ -68,24 +68,42 @@ architecture struct of DATA_PATH is
                   OUT_DATA : out STD_LOGIC_VECTOR (7 downto 0);
                   ADDR_DATA : in STD_LOGIC_VECTOR (7 downto 0));
     end component;
+    component PL -- pipeline with 4
+            port( OP_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                  A_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                  B_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                  C_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                  OP_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                  A_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                  B_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                  C_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                  CLK : in STD_LOGIC);
+    end component;
+    component PL2 -- pipeline with 3 
+                port( OP_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                      A_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                      B_IN : in STD_LOGIC_VECTOR (7 downto 0);
+                      OP_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                      A_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                      B_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+                      CLK : in STD_LOGIC);
+    end component;
 
 -- link components to their effective design
 for all : IM use entity work.IM(Behavioral);
 for all : REG use entity work.REG(Behavioral);
 for all : ALU use entity work.ALU(Behavioral);
 for all : DM use entity work.DM(Behavioral);
+for all : PL use entity work.PL(Behavioral);
+for all : PL2 use entity work.PL2(Behavioral);
 
 -- temporary signals
 signal INS : STD_LOGIC_VECTOR (7 downto 0) := x"00";
 signal ins_out : STD_LOGIC_VECTOR (31 downto 0); -- instruction memory output
 signal qa, qb : STD_LOGIC_VECTOR (7 downto 0); -- register bench output
-signal n,o,z,c : STD_LOGIC; -- TODO : use alu flags
+signal n,o,z,c : STD_LOGIC; -- TODO : use alu flags ? for branching
 signal alu_out : STD_LOGIC_VECTOR (7 downto 0); -- alu output
 signal dm_out : STD_LOGIC_VECTOR (7 downto 0); -- data memory output
-signal dm_addr_in : STD_LOGIC_VECTOR (7 downto 0); -- data memory in address
--- TODO : make following cleaner (LC)
-signal w_reg, w_dm : STD_LOGIC; -- from op to reg_bank
--- signal ctrl_alu : STD_LOGIC_VECTOR (1 downto 0); 
 
 -- pipeline LI/DI
 signal li_di_a_out : STD_LOGIC_VECTOR (7 downto 0);
@@ -110,80 +128,83 @@ signal mem_re_op_out : STD_LOGIC_VECTOR (7 downto 0);
 signal mem_re_b_out : STD_LOGIC_VECTOR (7 downto 0);
 
 -- op identifiers
--- TODO ? DIV
 constant AFC : STD_LOGIC_VECTOR := x"06";
 constant COP : STD_LOGIC_VECTOR := x"05";
 constant ALU_OP_MIN : STD_LOGIC_VECTOR := x"01";
 constant ALU_OP_MAX : STD_LOGIC_VECTOR := x"03"; -- ADD = x"01", MUL = x"02", SUB = x"03", DIV = x"04"
 constant LOAD : STD_LOGIC_VECTOR := x"07";
 constant STORE : STD_LOGIC_VECTOR := x"08";
--- decIns 0A and incIns OB
+
+
+-- mux outputs
+signal mux_di_ex_b : STD_LOGIC_VECTOR (7 downto 0);
+signal mux_ex_mem_b : STD_LOGIC_VECTOR (7 downto 0);
+signal mux_dm_addr_in : STD_LOGIC_VECTOR (7 downto 0);
+signal mux_mem_re_b : STD_LOGIC_VECTOR (7 downto 0);
+
+-- lc
+signal lc_ctrl_alu : STD_LOGIC_VECTOR (1 downto 0);
+signal lc_rw_dm, lc_rw_reg : STD_LOGIC;
+
 begin
-    -- port map : link inputs and outputs to changeable signals
-    U1: IM port map(CLK => CLK, ADDR_INS => INS, OUT_INS => ins_out);
-    U2: REG port map(AddrA => li_di_b_out(3 downto 0), AddrB => li_di_c_out(3 downto 0), AddrW => mem_re_a_out(3 downto 0), W => w_reg, DATA => mem_re_b_out, RST => RST, CLK => CLK, QA => qa, QB => qb);
-    U3: ALU port map(A => di_ex_b_out, B => di_ex_c_out, Ctrl_Alu => di_ex_op_out(1 downto 0), S => alu_out, N => n, O => o, Z => z, C => c);
-    U4: DM port map(IN_DATA => ex_mem_b_out,RW => w_dm,RST => RST, CLK => CLK, OUT_DATA => dm_out, ADDR_DATA => dm_addr_in);         
-    process --(CLK,RST,INS) --TODO : decide sensitivity list with 3 or wait until CLK'event with CLK only
-            variable incINS : integer := 1;
-            begin --TODO : gestion des aléas (R following W)
-                wait until CLK'event and CLK='1';
-                --instruction pipeline (1st floor)
-                li_di_b_out <= ins_out (15 downto 8);
-                li_di_c_out <= ins_out (7 downto 0);
-                li_di_a_out <= ins_out (23 downto 16);
-                li_di_op_out <= ins_out (31 downto 24);
-                
-                -- register bench pipeline propagation (2nd floor)
-                if di_ex_op_out = AFC and li_di_op_out = COP and di_ex_a_out = li_di_b_out then
-                    -- alea => insert NOP
-                    di_ex_b_out <= x"00";
-                    di_ex_c_out <= x"00";
-                    di_ex_a_out <= x"00";
-                    di_ex_op_out <= x"00";
-                    incINS := -1;
-                else
-                    incINS := 1;
-                    di_ex_a_out <= li_di_a_out;
-                    di_ex_op_out <= li_di_op_out;
-                    if (li_di_op_out = AFC) then -- 2nd figure : AFC & COP
-                        di_ex_b_out <= li_di_b_out;
-                    elsif (li_di_op_out > x"00" and li_di_op_out <= COP) or li_di_op_out = STORE then -- not dynamic
-                        di_ex_b_out <= qa;
-                    end if;    
-                    di_ex_c_out <= qb;
-                    if ex_mem_op_out > x"00" and ex_mem_op_out <= LOAD then -- not dynamic, but works here bc every op code <= 0x07 means writing in a register
-                        w_reg <= '1';
-                    else 
-                        w_reg <= '0';
-                    end if;
-                end if;
-                
-                -- ALU pipeline propagation (3rd floor)
-                ex_mem_a_out <= di_ex_a_out;
-                ex_mem_op_out <= di_ex_op_out;
-                if ((ALU_OP_MIN <= di_ex_op_out) and (di_ex_op_out <= ALU_OP_MAX)) then -- 3rd figure
-                    ex_mem_b_out <= alu_out;
-                else
-                    ex_mem_b_out <= di_ex_b_out; 
-                end if;
-                
-                if (di_ex_op_out = STORE) then -- prepare DM entries
-                    dm_addr_in <= ex_mem_a_out;
-                    w_dm <= '1';
-                elsif (di_ex_op_out = LOAD) then
-                    dm_addr_in <= ex_mem_b_out;
-                    w_dm <= '0';
-                end if;
-                
-                -- data memory pipeline propagation (4th floor)
-                mem_re_a_out <= ex_mem_a_out;
-                mem_re_op_out <= ex_mem_op_out; 
-                if ((ex_mem_op_out = LOAD) or (ex_mem_op_out = STORE)) then -- 4th and 5th fig : LOAD & STORE
-                    mem_re_b_out <= dm_out;
-                else    
-                    mem_re_b_out <= ex_mem_b_out;
-                end if;
-                INS <= INS + incINS;
-        end process;
+   -- port map : link inputs and outputs to changeable signals
+   U_IM: IM port map(CLK => CLK, ADDR_INS => INS, OUT_INS => ins_out);
+   U_REG: REG port map(AddrA => li_di_b_out(3 downto 0), AddrB => li_di_c_out(3 downto 0), AddrW => mem_re_a_out(3 downto 0), W => lc_rw_reg, DATA => mem_re_b_out, RST => RST, CLK => CLK, QA => qa, QB => qb);
+   U_ALU: ALU port map(A => di_ex_b_out, B => di_ex_c_out, Ctrl_Alu => lc_ctrl_alu, S => alu_out, N => n, O => o, Z => z, C => c);
+   U_DM: DM port map(IN_DATA => ex_mem_b_out,RW => lc_rw_dm,RST => RST, CLK => CLK, OUT_DATA => dm_out, ADDR_DATA => mux_dm_addr_in);         
+   
+   U_PL_IM: PL port map(OP_IN => ins_out(31 downto 24), A_IN => ins_out(23 downto 16), B_IN => ins_out(15 downto 8), C_IN => ins_out(7 downto 0), OP_OUT => li_di_op_out, A_OUT => li_di_a_out, B_OUT => li_di_b_out, C_OUT => li_di_c_out, CLK => CLK);
+   U_PL_REG: PL port map(OP_IN => li_di_op_out, A_IN => li_di_a_out, B_IN => mux_di_ex_b, C_IN => li_di_c_out, OP_OUT => di_ex_op_out, A_OUT => di_ex_a_out, B_OUT => di_ex_b_out, C_OUT => di_ex_c_out, CLK => CLK);
+   U_PL_ALU: PL2 port map(OP_IN => di_ex_op_out, A_IN => di_ex_a_out, B_IN => mux_ex_mem_b, OP_OUT => ex_mem_op_out, A_OUT => ex_mem_a_out, B_OUT => ex_mem_b_out, CLK => CLK);
+   U_PL_DM: PL2 port map(OP_IN => ex_mem_a_out, A_IN => ex_mem_op_out, B_IN => mux_mem_re_b, OP_OUT => mem_re_op_out, A_OUT => mem_re_a_out, B_OUT => mem_re_b_out, CLK => CLK);
+   
+   
+   -- LC
+   -- operation for alu (sub, add, mul)
+   lc_ctrl_alu <=
+        di_ex_op_out(1 downto 0) when (ALU_OP_MIN <= di_ex_op_out and di_ex_op_out <= ALU_OP_MAX) else
+        "XX";
+    
+   -- rw for data memory (LOAD and STORE)
+   lc_rw_dm <=
+        '1' when ex_mem_op_out = STORE else
+        '0' when ex_mem_op_out = LOAD else
+        'X';
+        
+   -- rw for register bench (AFC, COP, etc)
+   lc_rw_reg <=
+        '1' when (x"00" <= mem_re_op_out and mem_re_op_out < LOAD) else -- not dynamic, works with our op codes only
+        '0' when mem_re_op_out = LOAD else
+        'X';
+      
+   
+   -- MULTIPLEXERS 
+   -- mux for di_ex_b (register or value)
+   mux_di_ex_b <=
+        li_di_b_out when li_di_op_out = COP else
+        qa;
+    
+    -- mux for ex_mem_b (di_ex_b or alu output)
+    mux_ex_mem_b <=
+        di_ex_b_out when (di_ex_op_out > ALU_OP_MAX) else
+        alu_out when (ALU_OP_MIN <= di_ex_op_out and di_ex_op_out <= ALU_OP_MAX) else
+        "XXXXXXXX";
+    
+    -- mux for addr of data memory (ex_mem_a_out or ex_mem_b_out)
+    mux_dm_addr_in <=
+        ex_mem_a_out when ex_mem_op_out = STORE else
+        ex_mem_b_out when ex_mem_op_out = LOAD else
+        "XXXXXXXX";
+        
+    -- mux for mem_re_b (ex_mem_b_out or output of data memory)
+    mux_mem_re_b <=
+        dm_out when ex_mem_op_out = STORE or ex_mem_op_out = LOAD else
+        "XXXXXXXX" when ex_mem_op_out = x"00" or ex_mem_op_out > STORE else
+        ex_mem_b_out;
+   
+   process
+        begin
+            wait until CLK'event and CLK='1';
+            INS <= INS + 1;
+   end process;
 end struct; 
