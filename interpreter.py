@@ -3,7 +3,7 @@ import sys
 instructions = {}
 
 #asmFilename = sys.argv[1]
-asmFilename = './test/output_function.s'
+asmFilename = './test/output_math.s'
 with open(asmFilename, 'r') as file:
     inMain = False
     for line in file.readlines():
@@ -22,7 +22,7 @@ with open(asmFilename, 'r') as file:
 # attention à mettre la même valeur que définie dans branching.h
 address_size = 2
 stack_size = 32
-registers = {"r0":0, "r1": 0, "sp":stack_size - 1, "bp":stack_size - 1, "pc":startAddress, "lr":0}
+registers = {"r0":0, "r1": 0, "sp": stack_size - 1, "bp": stack_size - 1, "pc": startAddress, "lr": 0}
 flags = {'C': 0, 'N': 0, 'Z': 0}
 stack = [0]*stack_size
 
@@ -51,37 +51,43 @@ def resolve_value(param):
     else:
         return registers[param]
 
+def update_flags(x):
+    if (x == 0): flags['Z'] = 1
+    elif (x < 0): flags['N'] = 1
+    elif (x > 0): flags['C'] = 1
+
 def execute_instruction(instr):
+    print(instr)
     op, params = instr.split(' ', 1)
     nextAddress = registers['pc'] + 4
-    if op == "push":
-        stack[registers['sp']] = resolve_value(params)
-        registers['sp'] -= 1
-    elif op == 'pop':
-        registers['sp'] += 1
-        if params == 'pc': nextAddress = stack[registers['sp']]
-        else: registers[params] = stack[registers['sp']]
+    if op == 'store':
+        ptr, val = params.split()
+        if '%' in ptr: stack[registers[ptr.split('%')[0]] - int(ptr[3:])] = resolve_value(val)
+        else: stack[registers[ptr]] = resolve_value(val)
+        if ptr == 'sp': registers['sp'] -= 1
+    elif op == 'load':
+        res, ptr = params.split()
+        if 'bp' in ptr: registers[res] = resolve_value(ptr)
+        else: 
+            registers['sp'] += 1
+            if res == 'pc': nextAddress = stack[registers['sp']]
+            else: registers[res] = stack[registers['sp']]
     elif op == 'add':
         res, x, y = params.split()
         val = resolve_value(x) + resolve_value(y)
         registers[res] = val
-        if (val == 0): flags['Z'] = 1
-        elif (val < 0): flags['N'] = 1
-        elif (val > 0): flags['C'] = 1
+        update_flags(val)
     elif op == 'sub':
         res, x, y = params.split()
         val = resolve_value(x) - resolve_value(y)
         registers[res] = val
-        if (val == 0): flags['Z'] = 1
-        elif (val < 0): flags['N'] = 1
-        elif (val > 0): flags['C'] = 1
-    elif op == "ldr":
-        res, ptr = params.split()
-        registers[res] = resolve_value(ptr)
-    elif op == "str":
-        val, ptr = params.split()
-        stack[registers["bp"] - int(ptr[3:])] = resolve_value(val)
-    elif op == 'mov':
+        update_flags(val)
+    elif op == 'mul':
+        res, x, y = params.split()
+        val = resolve_value(x) * resolve_value(y)
+        registers[res] = val
+        update_flags(val)
+    elif op == 'afc':
         reg, val = params.split()
         registers[reg] = resolve_value(val)
     elif op == 'b': nextAddress = resolve_value(params)
