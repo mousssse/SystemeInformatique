@@ -125,7 +125,7 @@ if_condition:
     tLPAR relational_expression tRPAR 
       { writeAsmLine("pop r0");
       incrementCounter(INSTR_SIZE);
-      writeAsmLine("add r0 r0 #0");
+      writeAsmLine("add r0 #0 r0");
       incrementCounter(INSTR_SIZE);
       writeAsmLine("beq .else");
       $$ = getLineCounter();
@@ -137,7 +137,7 @@ while_statement:
     tWHILE tLPAR relational_expression tRPAR 
       { writeAsmLine("pop r0");
         incrementCounter(INSTR_SIZE);
-        writeAsmLine("add r0 r0 #0");
+        writeAsmLine("add r0 #0 r0");
         incrementCounter(INSTR_SIZE);
         writeAsmLine("beq .else");
         addBranching(getLineCounter());
@@ -253,7 +253,7 @@ relational_expression:
       { if (!isRelational) {
           writeAsmLine("pop r0");
           incrementCounter(INSTR_SIZE);
-          writeAsmLine("add r0 r0 #0");
+          writeAsmLine("add r0 #0 r0");
           incrementCounter(INSTR_SIZE);
           relationTo1Or0("beq");
         } }
@@ -361,8 +361,10 @@ term:
       { int addr = createTmpVar(0);
         // printf("Tmp var created for '%d'\n", $1);
         char buf[256];
-        sprintf(buf, "push #%d (%d)", $1, addr);
+        sprintf(buf, "mov r0 #%d (%d)", $1, addr);
         writeAsmLine(buf);
+        incrementCounter(INSTR_SIZE);
+        writeAsmLine("push r0");
         incrementCounter(INSTR_SIZE);
         isRelational = 0; }
     | tLPAR math_expression tRPAR { isRelational = 0; }
