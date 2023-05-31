@@ -41,11 +41,9 @@ begin
             wait until CLK'event and CLK='1';
             if (RST='1') then
                 data <= (others =>x"00");
+            elsif (RW='1') then
+                data(to_integer(unsigned(ADDR_DATA))) <= IN_DATA;                 
             end if;
-            if (RW='1') then
-                data(to_integer(unsigned(ADDR_DATA))) <= IN_DATA;
-            elsif (RW='0') then
-                OUT_DATA <= data(to_integer(unsigned(ADDR_DATA)));                   
-            end if;
+            OUT_DATA <= data(to_integer(unsigned(ADDR_DATA)));
     end process;
 end Behavioral;

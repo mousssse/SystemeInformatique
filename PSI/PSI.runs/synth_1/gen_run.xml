@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1685008163">
-  <File Type="VDS-TIMING-PB" Name="ALU_timing_summary_synth.pb"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="ALU_timing_summary_synth.rpt"/>
-  <File Type="RDS-DCP" Name="ALU.dcp"/>
-  <File Type="RDS-UTIL-PB" Name="ALU_utilization_synth.pb"/>
-  <File Type="RDS-UTIL" Name="ALU_utilization_synth.rpt"/>
-  <File Type="RDS-PROPCONSTRS" Name="ALU_drc_synth.rpt"/>
-  <File Type="RDS-RDS" Name="ALU.vds"/>
-  <File Type="REPORTS-TCL" Name="ALU_reports.tcl"/>
-  <File Type="PA-TCL" Name="ALU.tcl"/>
+<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1685523725">
+  <File Type="VDS-TIMING-PB" Name="DATA_PATH_timing_summary_synth.pb"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="DATA_PATH_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="DATA_PATH.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="DATA_PATH_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="DATA_PATH_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="DATA_PATH_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="DATA_PATH.vds"/>
+  <File Type="REPORTS-TCL" Name="DATA_PATH_reports.tcl"/>
+  <File Type="PA-TCL" Name="DATA_PATH.tcl"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/ALU.vhd">
@@ -51,13 +51,19 @@
     </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="ALU"/>
-      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="TopModule" Val="DATA_PATH"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
     <Filter Type="Constrs"/>
+    <File Path="$PSRCDIR/constrs_1/new/testFig5.xdc">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
     <Config>
+      <Option Name="TargetConstrsFile" Val="$PSRCDIR/constrs_1/new/testFig5.xdc"/>
       <Option Name="ConstrsType" Val="XDC"/>
     </Config>
   </FileSet>

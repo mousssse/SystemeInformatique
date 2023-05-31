@@ -36,47 +36,22 @@ end testFig5;
 
 architecture Behavioral of testFig5 is
 
-component ins_mem -- instruction memory
-        port( CLK : in STD_LOGIC;
-              ADDR_INS :in STD_LOGIC_VECTOR(7 downto 0);
-              OUT_INS : out STD_LOGIC_VECTOR (31 downto 0));
-end component;
-component reg_ben -- register bench
-        port( AddrA : in STD_LOGIC_VECTOR (3 downto 0); 
-              AddrB : in STD_LOGIC_VECTOR (3 downto 0);
-              AddrW : in STD_LOGIC_VECTOR (3 downto 0);
-              W : in STD_LOGIC; -- 1 if writing 
-              DATA : in STD_LOGIC_VECTOR (7 downto 0);
-              RST : in STD_LOGIC;
+    component DATA_PATH is 
+        Port (INS : in STD_LOGIC_VECTOR (7 downto 0);
               CLK : in STD_LOGIC;
-              QA : out STD_LOGIC_VECTOR (7 downto 0);
-              QB : out STD_LOGIC_VECTOR (7 downto 0));
-end component;
-component alu -- arithmetics logic unit
-        port( A : in STD_LOGIC_VECTOR (7 downto 0);
-              B : in STD_LOGIC_VECTOR (7 downto 0);
-              Ctrl_Alu : in STD_LOGIC_VECTOR (2 downto 0);
-              S : out STD_LOGIC_VECTOR (7 downto 0);
-              N : out STD_LOGIC;
-              O : out STD_LOGIC;
-              Z : out STD_LOGIC;
-              C : out STD_LOGIC);
-end component;
-component data_memory -- data memory
-        port( IN_DATA : in STD_LOGIC_VECTOR (7 downto 0);
-              RW : in STD_LOGIC; -- 0 if write, 1 if read
-              RST : in STD_LOGIC;
-              CLK : in STD_LOGIC;
-              OUT_DATA : out STD_LOGIC_VECTOR (7 downto 0);
-              ADDR_DATA : in STD_LOGIC_VECTOR (7 downto 0));
-end component;
+              RST : in STD_LOGIC);
+    end component;
+    
+ 
 
 -- clock & entries test
 constant Clock_period : time := 10 ns;
-signal instructionTest : STD_LOGIC_VECTOR (31 downto 0) :=x"00000000";
+signal INS : STD_LOGIC_VECTOR (7 downto 0) :=x"00";
+signal CLK : STD_LOGIC;
+signal RST : STD_LOGIC;
 
--- temporary signals 
-signal clk, rst : STD_LOGIC; -- TODO : both
+-- temporary signals
+-- signal clk, rst : STD_LOGIC; -- TODO : both
 signal ins_out : STD_LOGIC_VECTOR (31 downto 0); -- instruction memory output
 signal qa, qb : STD_LOGIC_VECTOR (7 downto 0); -- register bench output
 signal n,o,z,c : STD_LOGIC; -- TODO : use alu flags
@@ -110,76 +85,66 @@ signal mem_re_op_out : STD_LOGIC_VECTOR (7 downto 0);
 signal mem_re_b_out : STD_LOGIC_VECTOR (7 downto 0);
 
 -- op identifiers
--- TODO ? DIV
 constant AFC : STD_LOGIC_VECTOR := x"06";
 constant COP : STD_LOGIC_VECTOR := x"05";
 constant ALU_OP_MIN : STD_LOGIC_VECTOR := x"01";
 constant ALU_OP_MAX : STD_LOGIC_VECTOR := x"03"; -- ADD = x"01", MUL = x"02", SUB = x"03", DIV = x"04"
 constant LOAD : STD_LOGIC_VECTOR := x"07";
 constant STORE : STD_LOGIC_VECTOR := x"08";
+
 begin
 
--- port map : link inputs and outputs to changeable signals
-    U1: ins_mem port map(CLK => CLK, ADDR_INS => instructionTest, OUT_INS => ins_out);
-    U2: reg_ben port map(AddrA => li_di_b_out(3 downto 0), AddrB => li_di_c_out(3 downto 0), AddrW => mem_re_a_out(3 downto 0), W => w, DATA => mem_re_b_out, RST => RST, CLK => CLK, QA => qa, QB => qb);
-    U3: alu port map(A => di_ex_b_out, B => di_ex_c_out, Ctrl_Alu => ctrl_alu, S => alu_out, N => n, O => o, Z => z, C => c);
-    U4: data_memory port map(IN_DATA => dm_addr_in,RW => w,RST => RST, CLK => CLK, OUT_DATA => dm_out, ADDR_DATA => ex_mem_b_out);
+DUT : DATA_PATH PORT MAP (INS => INS, CLK => CLK, RST => RST);
 
-
+-- Clock process : f = 100 MHz
 Clock_process : process
    begin
        CLK <= not(CLK);
        wait for Clock_period/2;
    end process;
-
-process --(CLK,RST,INS) --TODO : decide sensitivity list with 3 or wait until CLK'event with CLK only
-    begin --TODO : gestion des aléas (R following W)
-        wait until CLK'event and CLK='1'; --TODO : change CLK (use counter ?)
-        
-        --instruction pipeline (1st floor)
-        li_di_a_out <= ins_out (15 downto 8);
-        li_di_op_out <= ins_out (7 downto 0);
-        li_di_b_out <= ins_out (23 downto 16);
-        li_di_c_out <= ins_out (31 downto 24);
-        
-        -- register bench pipeline propagation (2nd floor)
-        di_ex_a_out <= li_di_a_out;
-        di_ex_op_out <= li_di_op_out;
-        if (li_di_op_out = AFC) then -- 2nd figure : AFC & COP
-            w <= '1'; -- write
-            di_ex_b_out <= li_di_b_out;
-        elsif (li_di_op_out = COP) then
-            w <= '0'; -- read
-            di_ex_b_out <= qa;
-        end if;    
-        di_ex_c_out <= qb;
-        
-        -- ALU pipeline propagation (3rd floor)
-        ex_mem_a_out <= di_ex_a_out;
-        ex_mem_op_out <= di_ex_op_out;
-        if ((ALU_OP_MIN <= di_ex_op_out) and (di_ex_op_out <= ALU_OP_MAX)) then -- 3rd figure
-            w <= '1'; -- write
-            ctrl_alu <= di_ex_op_out(1 downto 0);
-            ex_mem_b_out <= alu_out;
-        else
-            ex_mem_b_out <= di_ex_b_out;
-        end if;
-        
-        -- data memory pipeline propagation (4th floor)
-        if (ex_mem_op_out = STORE) then
-            dm_addr_in <= ex_mem_a_out;
-            w <= '1'; -- write
-        elsif (ex_mem_op_out = LOAD) then
-            w <= '0'; -- read
-            dm_addr_in <= ex_mem_b_out;
-        end if;
-        mem_re_a_out <= ex_mem_a_out;
-        mem_re_op_out <= ex_mem_op_out; 
-        if ((ex_mem_op_out = LOAD) or (ex_mem_op_out = STORE)) then -- 4th and 5th fig : LOAD & STORE
-            mem_re_b_out <= dm_out;
-        else    
-            mem_re_b_out <= ex_mem_b_out;
-        end if;
+   
+-- RST process : rst once at beginning of execution
+Reset_process : process
+    begin
+        RST <= '1';
+        wait for 100 ns;
+        RST <= '0';
+    end process;
+   
+-- input process
+INS_process : process
+    begin
+        INS <=  x"06010600"; -- AFC(x"06") R1(x"01") 6(x"06") C unused(x"00") (affect 6 to R1)
+        -- R1 should be equal to 6
+        wait for 10 ns;
+        INS <=  x"06010900"; -- AFC(x"06") R2(x"02") 9(x"09") C unused(x"00") (affect 9 to R2)
+        -- R2 should be equal to 9
+        wait for 10 ns;
+        INS <=  x"01000102"; -- ADD(x"01") in R0(x"00") R1(x"01") + R2(x"02") (simple addition)
+        -- RO should be equal to R1 + R2 = x"0F" / 15
+        wait for 10 ns;
+        INS <=  x"01000001"; -- ADD(x"01") in R0(x"00") R0(x"00") + R1(x"01") (destination register used in add)
+        -- RO should be equal to R0 + R1 = x"15" / 21
+        wait for 10 ns;
+        INS <=  x"05020100"; -- COP(x"05") in R2(x"02") R0(x"00") C unused(x"00") (copy of R0 in R2)
+        -- R2 should be equal to R0 (old value of R0) = x"15" / 21
+        wait for 10 ns;
+        INS <=  x"010001FF"; -- COP(x"05") in R2(x"02") R0(x"00") C unused(x"FF") (C changed to make sure it doesn't impact)
+        -- idem ins before R2 = R0 = x"15" / 21
+        wait for 10 ns;
+        INS <=  x"03000102"; -- SUB(x"03") in R0(x"00") R2(x"02") * R1(x"01") (simple substraction no carry no negative)
+        -- R0 should be R2 - R1 = 21 - 6 = 15 = x"0F"
+        wait for 10 ns;
+        INS <=  x"02000102"; -- MUL(x"02") in R0(x"00") R1(x"01") - R2(x"02") (simple multiplication no overflow)
+        -- R0 should be R1 * R2 = 21 * 6 = 126 = x"7E"
+        wait for 10 ns;
+    end process;
+   
+-- output process / assertions
+process 
+    begin 
+        wait for 10 ns; -- let 1st pipeline propagation happen
+    
     end process;
 
 end Behavioral;

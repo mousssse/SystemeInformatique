@@ -2,11 +2,16 @@
 2018.2
 Jun 14 2018
 20:07:38
+/home/vguittar/Bureau/4A/PSI/ALU/ALU.srcs/sim_1/new/testALU.vhd,1685096932,vhdl,,,,testalu,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/ALU/ALU.srcs/sim_1/new/testDATA_PATH.vhd,1685523679,vhdl,,,,testdata_path,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/ALU/ALU.srcs/sim_1/new/testDM.vhd,1685121169,vhdl,,,,testdm,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/ALU/ALU.srcs/sim_1/new/testIM.vhd,1685440873,vhdl,,,,testim,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/ALU/ALU.srcs/sim_1/new/testREG.vhd,1685110455,vhdl,,,,testreg,,,,,,,,
 /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/ALU_Test.vhd,1685008157,vhdl,,,,alu_test,,,,,,,,
 /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/testDP.vhd,1685007488,vhdl,,,,,,,,,,,,
-/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/testFig5.vhd,1685008084,vhdl,,,,testfig5,,,,,,,,
-/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd,1684317180,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,alu,,,,,,,,
-/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,1685007463,vhdl,,,,data_path,,,,,,,,
-/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd,1684317181,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,dm,,,,,,,,
-/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd,1684317196,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,im,,,,,,,,
-/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd,1684317182,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,reg,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/testFig5.vhd,1685084841,vhdl,,,,testfig5,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd,1685523566,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,alu,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,1685523486,vhdl,,,,data_path,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd,1685523576,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,dm,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd,1685523541,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,im,,,,,,,,
+/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd,1685523554,vhdl,/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd,,,reg,,,,,,,,

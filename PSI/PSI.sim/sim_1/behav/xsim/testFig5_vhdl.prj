@@ -7,7 +7,6 @@ vhdl xil_defaultlib  \
 "../../../../PSI.srcs/sim_1/new/ALU_Test.vhd" \
 "../../../../PSI.srcs/sources_1/new/DATA_PATH.vhd" \
 "../../../../PSI.srcs/sim_1/new/testFig5.vhd" \
-"../../../../PSI.srcs/sim_1/new/testDP.vhd" \
 
 # Do not sort compile order
 nosort

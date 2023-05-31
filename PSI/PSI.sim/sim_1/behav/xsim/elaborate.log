@@ -1,8 +1,7 @@
 Vivado Simulator 2018.2
 Copyright 1986-1999, 2001-2018 Xilinx, Inc. All Rights Reserved.
-Running: /usr/local/insa/Xilinx.VIVADO/Vivado/2018.2/bin/unwrapped/lnx64.o/xelab -wto 803a732ea1e54d258d632fd6b12ac363 --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot testFig5_behav xil_defaultlib.testFig5 -log elaborate.log 
+Running: /usr/local/insa/Xilinx.VIVADO/Vivado/2018.2/bin/unwrapped/lnx64.o/xelab -wto 803a732ea1e54d258d632fd6b12ac363 --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot testDATA_PATH_behav xil_defaultlib.testDATA_PATH -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
-ERROR: [VRFC 10-665] expression has 32 elements ; formal addr_ins expects 8 [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/testFig5.vhd:123]
-WARNING: [VRFC 10-122] ins_mem remains a black-box since it has no binding entity [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/testFig5.vhd:123]
-ERROR: [XSIM 43-3321] Static elaboration of top level VHDL design unit testfig5 in library work failed.
+Completed static elaboration
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel

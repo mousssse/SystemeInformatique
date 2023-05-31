@@ -44,14 +44,11 @@ begin
         wait until CLK'event and CLK = '1';
         if (RST='1') then 
             reg <= (others => x"00");
-        else
-            if (W='1') then
-                reg(to_integer(unsigned(AddrW))) <= DATA;
-            end if;
+        elsif (W='1') then
+            reg(to_integer(unsigned(AddrW))) <= DATA;
         end if;
     end process;
-    QA <= reg(to_integer(unsigned(AddrA)));
-    QB <= reg(to_integer(unsigned(AddrB)));
+    QA <= DATA when (AddrW /= "UUUU" and AddrA=AddrW and RST = '0' and W = '1') else reg(to_integer(unsigned(AddrA))); 
+    QB <= DATA when (AddrW /= "UUUU" and AddrB=AddrW and RST = '0' and W = '1') else reg(to_integer(unsigned(AddrB)));
 
 end Behavioral;
-
