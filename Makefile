@@ -14,12 +14,16 @@ clean:
 
 test: all
 	./c_lang ./test/output_math.s pythonDict.py < test/test_math.c
+	python3 ./crossCompiler.py ./test/output_math.s
 
 	./c_lang ./test/output_if.s pythonDict.py < test/test_if.c
 	python3 ./branching.py ./test/output_if.s
+	python3 ./crossCompiler.py ./test/output_if.s
 
 	./c_lang ./test/output_while.s pythonDict.py < test/test_while.c
 	python3 ./branching.py ./test/output_while.s
+	python3 ./crossCompiler.py ./test/output_while.s
 
 	./c_lang ./test/output_function.s pythonDict.py < test/test_function.c
 	python3 ./branching.py ./test/output_function.s
+	python3 ./crossCompiler.py ./test/output_function.s
