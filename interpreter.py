@@ -63,10 +63,18 @@ def execute_instruction(instr):
         else: registers[params] = stack[registers['sp']]
     elif op == 'add':
         res, x, y = params.split()
-        registers[res] = resolve_value(x) + resolve_value(y)
+        val = resolve_value(x) + resolve_value(y)
+        registers[res] = val
+        if (val == 0): flags['Z'] = 1
+        elif (val < 0): flags['N'] = 1
+        elif (val > 0): flags['C'] = 1
     elif op == 'sub':
         res, x, y = params.split()
-        registers[res] = resolve_value(x) - resolve_value(y)
+        val = resolve_value(x) - resolve_value(y)
+        registers[res] = val
+        if (val == 0): flags['Z'] = 1
+        elif (val < 0): flags['N'] = 1
+        elif (val > 0): flags['C'] = 1
     elif op == "ldr":
         res, ptr = params.split()
         registers[res] = resolve_value(ptr)
@@ -76,11 +84,6 @@ def execute_instruction(instr):
     elif op == 'mov':
         reg, val = params.split()
         registers[reg] = resolve_value(val)
-    elif op == 'cmp':
-        x = resolve_value(params.split()[0])
-        if (x == 0): flags['Z'] = 1
-        elif (x < 0): flags['N'] = 1
-        elif (x > 0): flags['C'] = 1
     elif op == 'b': nextAddress = resolve_value(params)
     elif op == 'beq' and flags['Z'] == 1: nextAddress = resolve_value(params)
     elif op == 'bne' and flags['Z'] != 1: nextAddress = resolve_value(params)

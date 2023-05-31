@@ -94,7 +94,7 @@ block_statement:
         int nbDeleted = delVarFromList(); 
         char buf[256]; 
         if (nbDeleted > 0) {
-          sprintf(buf, "add sp sp #%d", nbDeleted); 
+          sprintf(buf, "add sp #%d sp", nbDeleted); 
           writeAsmLine(buf); 
           incrementCounter(INSTR_SIZE);
         } 
@@ -125,7 +125,7 @@ if_condition:
     tLPAR relational_expression tRPAR 
       { writeAsmLine("pop r0");
       incrementCounter(INSTR_SIZE);
-      writeAsmLine("cmp r0 #0");
+      writeAsmLine("add r0 r0 #0");
       incrementCounter(INSTR_SIZE);
       writeAsmLine("beq .else");
       $$ = getLineCounter();
@@ -137,7 +137,7 @@ while_statement:
     tWHILE tLPAR relational_expression tRPAR 
       { writeAsmLine("pop r0");
         incrementCounter(INSTR_SIZE);
-        writeAsmLine("cmp r0 #0");
+        writeAsmLine("add r0 r0 #0");
         incrementCounter(INSTR_SIZE);
         writeAsmLine("beq .else");
         addBranching(getLineCounter());
@@ -252,6 +252,8 @@ relational_expression:
     math_expression %prec tEMPTY 
       { if (!isRelational) {
           writeAsmLine("pop r0");
+          incrementCounter(INSTR_SIZE);
+          writeAsmLine("add r0 r0 #0");
           incrementCounter(INSTR_SIZE);
           relationTo1Or0("beq");
         } }
@@ -374,9 +376,7 @@ unary_expression:
       { //printf("unary sub\n");
         writeAsmLine("pop r0");
         incrementCounter(INSTR_SIZE);
-        writeAsmLine("mov r1 #0");
-        incrementCounter(INSTR_SIZE);
-        writeAsmLine("sub r0 r1 r0");
+        writeAsmLine("sub r0 #0 r0");
         incrementCounter(INSTR_SIZE);
         writeAsmLine("push r0");
         incrementCounter(INSTR_SIZE); }
@@ -387,8 +387,10 @@ function_call:
     tID tLPAR term_list tRPAR 
       { char buf[256];
         int nbVar = nbVarInTable() - $3;
-        sprintf(buf, "sub bp bp #%d", nbVar);
+        sprintf(buf, "mov r0 #%d", nbVar);
         writeAsmLine(buf);
+        incrementCounter(INSTR_SIZE);
+        writeAsmLine("sub bp bp r0");
         incrementCounter(INSTR_SIZE);
         sprintf(buf, "mov lr 0x%.*X", 2 * ADDRESS_SIZE, getLineCounter() + 2*INSTR_SIZE);
         writeAsmLine(buf); 
@@ -396,10 +398,10 @@ function_call:
         sprintf(buf, "b 0x%.*X", 2 * ADDRESS_SIZE, getFunAddr($1, $3));
         writeAsmLine(buf);
         incrementCounter(INSTR_SIZE);
-        sprintf(buf, "add bp bp #%d", nbVar);
+        sprintf(buf, "add bp #%d bp", nbVar);
         writeAsmLine(buf);
         incrementCounter(INSTR_SIZE);
-        sprintf(buf, "add sp sp #%d", $3);
+        sprintf(buf, "add sp #%d sp", $3);
         writeAsmLine(buf);
         incrementCounter(INSTR_SIZE);
         writeAsmLine("push r0");
@@ -414,8 +416,10 @@ function_call:
     | tID tLPAR tRPAR
       { char buf[256];
         int nbVar = nbVarInTable();
-        sprintf(buf, "sub bp bp #%d", nbVar);
+        sprintf(buf, "mov r0 #%d", nbVar);
         writeAsmLine(buf);
+        incrementCounter(INSTR_SIZE);
+        writeAsmLine("sub bp bp r0");
         incrementCounter(INSTR_SIZE);
         sprintf(buf, "mov lr 0x%.*X", 2 * ADDRESS_SIZE, getLineCounter() + 2*INSTR_SIZE);
         writeAsmLine(buf); 
@@ -423,7 +427,7 @@ function_call:
         sprintf(buf, "b 0x%.*X", 2 * ADDRESS_SIZE, getFunAddr($1, 0));
         writeAsmLine(buf);
         incrementCounter(INSTR_SIZE);
-        sprintf(buf, "add bp bp #%d", nbVar);
+        sprintf(buf, "add bp #%d bp", nbVar);
         writeAsmLine(buf);
         incrementCounter(INSTR_SIZE);
         free($1); }
@@ -442,8 +446,6 @@ term_list:
 
 void relationTo1Or0(char* op) {
   writeAsmLine("mov r1 #0");
-  incrementCounter(INSTR_SIZE);
-  writeAsmLine("cmp r0 #0");
   incrementCounter(INSTR_SIZE);
   char buf[256];
   sprintf(buf, "%s 0x%.*X", op, 2 * ADDRESS_SIZE, getLineCounter() + 2*INSTR_SIZE);

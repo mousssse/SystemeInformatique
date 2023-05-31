@@ -41,6 +41,6 @@
 0x9C: str r0 bp%2 (b)
 0xA0: push #0 (4)
 0xA4: pop r0
-0xA8: add sp sp #3
+0xA8: add sp #3 sp
 0xAC: pop pc
 
