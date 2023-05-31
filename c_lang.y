@@ -185,7 +185,6 @@ declaration_expression:
     | declaration_expression tCOMMA declaration_expression %prec tEMPTY
     ;
 
-/* TODO: Currently, only the last var in id_list can be assigned */
 assignment_expression:
     tID tASSIGN math_expression
       { deleteTmpVar();
@@ -371,7 +370,16 @@ term:
     ;
 
 unary_expression: 
-    tSUB term /*{ printf("unary sub\n"); }*/
+    tSUB term 
+      { //printf("unary sub\n");
+        writeAsmLine("pop r0");
+        incrementCounter(INSTR_SIZE);
+        writeAsmLine("mov r1 #0");
+        incrementCounter(INSTR_SIZE);
+        writeAsmLine("sub r0 r1 r0");
+        incrementCounter(INSTR_SIZE);
+        writeAsmLine("push r0");
+        incrementCounter(INSTR_SIZE); }
     | tADD term /*{ printf("unary add\n"); }*/
     ;
 
