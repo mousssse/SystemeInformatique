@@ -42,8 +42,7 @@ begin
     aux <=
         (x"00"&A) + (x"00"&B) when Ctrl_Alu="01" else
         (x"00"&A) - (x"00"&B) when Ctrl_Alu="11" else
-        A * B when Ctrl_Alu="10" else
-        x"0000";
+        A * B when Ctrl_Alu="10";
     S <= aux(7 downto 0);
     N <= '1' when aux(15)='1' else '0';
     O <= '1' when aux(15 downto 8) /= x"00" else '0';

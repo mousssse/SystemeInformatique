@@ -31,13 +31,12 @@ set_property ip_output_repo /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI
 set_property ip_cache_permissions {read write} [current_project]
 read_vhdl -library xil_defaultlib {
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd
+  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd
-  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd
-  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sim_1/new/ALU_Test.vhd
-  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd
   /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd
+  /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -47,9 +46,6 @@ read_vhdl -library xil_defaultlib {
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/constrs_1/new/testFig5.xdc
-set_property used_in_implementation false [get_files /home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/constrs_1/new/testFig5.xdc]
-
 set_param ips.enableIPCacheLiteLoad 0
 close [open __synthesis_is_running__ w]
 

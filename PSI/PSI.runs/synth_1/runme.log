@@ -14,37 +14,492 @@ Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
 INFO: Launching helper process for spawning children vivado processes
-INFO: Helper process launched with PID 18361 
+INFO: Helper process launched with PID 462341 
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1255.266 ; gain = 83.812 ; free physical = 8632 ; free virtual = 20294
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1255.270 ; gain = 83.809 ; free physical = 107379 ; free virtual = 138572
 ---------------------------------------------------------------------------------
-WARNING: [Synth 8-2489] overwriting existing secondary unit behavioral [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:44]
-INFO: [Synth 8-638] synthesizing module 'DATA_PATH' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:36]
-INFO: [Synth 8-3491] module 'IM' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd:27' bound to instance 'U_IM' of component 'IM' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:151]
+INFO: [Synth 8-638] synthesizing module 'DATA_PATH' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:32]
+INFO: [Synth 8-3491] module 'IM' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd:27' bound to instance 'U_IM' of component 'IM' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:162]
 INFO: [Synth 8-638] synthesizing module 'IM' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd:33]
 INFO: [Synth 8-256] done synthesizing module 'IM' (1#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/IM.vhd:33]
-INFO: [Synth 8-3491] module 'REG' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd:26' bound to instance 'U_REG' of component 'REG' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:152]
+INFO: [Synth 8-3491] module 'REG' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd:26' bound to instance 'U_REG' of component 'REG' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:163]
 INFO: [Synth 8-638] synthesizing module 'REG' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd:38]
 INFO: [Synth 8-256] done synthesizing module 'REG' (2#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/REG.vhd:38]
-INFO: [Synth 8-3491] module 'ALU' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd:28' bound to instance 'U_ALU' of component 'ALU' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:153]
+INFO: [Synth 8-3491] module 'ALU' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd:28' bound to instance 'U_ALU' of component 'ALU' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:164]
 INFO: [Synth 8-638] synthesizing module 'ALU' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd:39]
 INFO: [Synth 8-256] done synthesizing module 'ALU' (3#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd:39]
-INFO: [Synth 8-3491] module 'DM' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd:26' bound to instance 'U_DM' of component 'DM' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:154]
+INFO: [Synth 8-3491] module 'DM' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd:26' bound to instance 'U_DM' of component 'DM' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:165]
 INFO: [Synth 8-638] synthesizing module 'DM' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd:35]
 INFO: [Synth 8-256] done synthesizing module 'DM' (4#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DM.vhd:35]
-INFO: [Synth 8-3491] module 'PL' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:34' bound to instance 'U_PL_IM' of component 'PL' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:156]
-INFO: [Synth 8-638] synthesizing module 'PL' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:44]
-WARNING: [Synth 8-3848] Net C_OUT in module/entity PL does not have driver. [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:42]
-INFO: [Synth 8-256] done synthesizing module 'PL' (5#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:44]
-INFO: [Synth 8-3491] module 'PL' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:34' bound to instance 'U_PL_REG' of component 'PL' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:157]
-ERROR: [Synth 8-2948] no architecture 'behavioral' for entity 'PL2' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:158]
-ERROR: [Synth 8-285] failed synthesizing module 'DATA_PATH' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:36]
+INFO: [Synth 8-3491] module 'PL' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:34' bound to instance 'U_PL_IM' of component 'PL' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:167]
+INFO: [Synth 8-638] synthesizing module 'PL' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:46]
+INFO: [Synth 8-256] done synthesizing module 'PL' (5#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:46]
+INFO: [Synth 8-3491] module 'PL' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL.vhd:34' bound to instance 'U_PL_REG' of component 'PL' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:168]
+INFO: [Synth 8-3491] module 'PL2' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:34' bound to instance 'U_PL_ALU' of component 'PL2' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:169]
+INFO: [Synth 8-638] synthesizing module 'PL2' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:44]
+INFO: [Synth 8-256] done synthesizing module 'PL2' (6#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:44]
+INFO: [Synth 8-3491] module 'PL2' declared at '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:34' bound to instance 'U_PL_DM' of component 'PL2' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:170]
+INFO: [Synth 8-256] done synthesizing module 'DATA_PATH' (7#1) [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/DATA_PATH.vhd:32]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1308.891 ; gain = 137.438 ; free physical = 8631 ; free virtual = 20294
+Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1309.895 ; gain = 138.434 ; free physical = 107395 ; free virtual = 138572
 ---------------------------------------------------------------------------------
-RTL Elaboration failed
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1309.895 ; gain = 138.434 ; free physical = 107396 ; free virtual = 138573
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1317.898 ; gain = 146.438 ; free physical = 107396 ; free virtual = 138573
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5544] ROM "reg_reg[0]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[1]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[2]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[3]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[4]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[5]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[6]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[7]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[8]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[9]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[10]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[11]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[12]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[13]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[14]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "reg_reg[15]" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5546] ROM "data_reg[0]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[1]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[2]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[3]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[4]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[5]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[6]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[7]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[8]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[9]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[10]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[11]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[12]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[13]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[14]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[15]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[16]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[17]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[18]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[19]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[20]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[21]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[22]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[23]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[24]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[25]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[26]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[27]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[28]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[29]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[30]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[31]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[32]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[33]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[34]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[35]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[36]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[37]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[38]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[39]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[40]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[41]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[42]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[43]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[44]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[45]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[46]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[47]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[48]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[49]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[50]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[51]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[52]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[53]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[54]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[55]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[56]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[57]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[58]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[59]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[60]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[61]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[62]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[63]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[64]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[65]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[66]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[67]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[68]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[69]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[70]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[71]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[72]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[73]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[74]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[75]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[76]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[77]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[78]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[79]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[80]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[81]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[82]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[83]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[84]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[85]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[86]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[87]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[88]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[89]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[90]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[91]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[92]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[93]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[94]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[95]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[96]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[97]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[98]" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "data_reg[99]" won't be mapped to RAM because it is too sparse
+INFO: [Common 17-14] Message 'Synth 8-5546' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+WARNING: [Synth 8-327] inferring latch for variable 'aux_reg' [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/ALU.vhd:42]
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1336.164 ; gain = 164.703 ; free physical = 107355 ; free virtual = 138531
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input     16 Bit       Adders := 1     
+	   2 Input      8 Bit       Adders := 1     
++---Registers : 
+	               28 Bit    Registers := 1     
+	                8 Bit    Registers := 288   
++---Muxes : 
+	 256 Input     28 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 6     
+	   2 Input      1 Bit        Muxes := 276   
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module DATA_PATH 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      8 Bit       Adders := 1     
++---Registers : 
+	                8 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      8 Bit        Muxes := 6     
+	   2 Input      1 Bit        Muxes := 2     
+Module IM 
+Detailed RTL Component Info : 
++---Registers : 
+	               28 Bit    Registers := 1     
++---Muxes : 
+	 256 Input     28 Bit        Muxes := 1     
+Module REG 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 16    
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 16    
+Module ALU 
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input     16 Bit       Adders := 1     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 2     
+Module DM 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 257   
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 256   
+Module PL 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 4     
+Module PL2 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 3     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+Warning: Parallel synthesis criteria is not met 
+WARNING: [Synth 8-3936] Found unconnected internal register 'U_PL_DM/A_OUT_reg' and it is trimmed from '8' to '4' bits. [/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.srcs/sources_1/new/PL2.vhd:51]
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[15]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[14]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[13]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[12]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[11]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[10]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[9]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[8]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_ALU/aux_reg[0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[0][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[1][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[2][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[3][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[4][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[5][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[6][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[7][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[8][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][4]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][3]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][2]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][1]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[9][0]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[10][7]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[10][6]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[10][5]) is unused and will be removed from module DATA_PATH.
+WARNING: [Synth 8-3332] Sequential element (U_DM/data_reg[10][4]) is unused and will be removed from module DATA_PATH.
+INFO: [Common 17-14] Message 'Synth 8-3332' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:31 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107188 ; free virtual = 138383
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:31 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107188 ; free virtual = 138383
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:13 ; elapsed = 00:00:31 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107188 ; free virtual = 138383
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++-+-----+------+
+| |Cell |Count |
++-+-----+------+
++-+-----+------+
+
+Report Instance Areas: 
++------+---------+-------+------+
+|      |Instance |Module |Cells |
++------+---------+-------+------+
+|1     |top      |       |     0|
++------+---------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2330 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.250 ; gain = 252.789 ; free physical = 107178 ; free virtual = 138374
+Synthesis Optimization Complete : Time (s): cpu = 00:00:13 ; elapsed = 00:00:32 . Memory (MB): peak = 1424.258 ; gain = 252.789 ; free physical = 107185 ; free virtual = 138380
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
 INFO: [Common 17-83] Releasing license: Synthesis
-19 Infos, 2 Warnings, 0 Critical Warnings and 3 Errors encountered.
-synth_design failed
-ERROR: [Common 17-69] Command failed: Synthesis failed - please see the console or run log file for details
-INFO: [Common 17-206] Exiting Vivado at Wed May 31 12:31:02 2023...
+147 Infos, 102 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:16 ; elapsed = 00:00:34 . Memory (MB): peak = 1503.273 ; gain = 343.457 ; free physical = 107143 ; free virtual = 138353
+WARNING: [Constraints 18-5210] No constraint will be written out.
+INFO: [Common 17-1381] The checkpoint '/home/vguittar/Bureau/4A/PSI/SystemeInformatique/PSI/PSI.runs/synth_1/DATA_PATH.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file DATA_PATH_utilization_synth.rpt -pb DATA_PATH_utilization_synth.pb
+report_utilization: Time (s): cpu = 00:00:00.10 ; elapsed = 00:00:00.15 . Memory (MB): peak = 1527.285 ; gain = 0.000 ; free physical = 107118 ; free virtual = 138328
+INFO: [Common 17-206] Exiting Vivado at Wed May 31 21:15:10 2023...

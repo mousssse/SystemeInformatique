@@ -41,7 +41,7 @@ entity PL2 is
            CLK : in STD_LOGIC); -- add reset ?
 end PL2;
 
-architecture Behavioral of PL is
+architecture Behavioral of PL2 is
 
 begin
     process
