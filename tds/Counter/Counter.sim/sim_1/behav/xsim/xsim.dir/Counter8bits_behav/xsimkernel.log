@@ -1,4 +1,0 @@
-Running: xsim.dir/Counter8bits_behav/xsimk -simmode gui -wdb Counter8bits_behav.wdb -simrunnum 0 -socket 34601
-Design successfully loaded
-Design Loading Memory Usage: 32656 KB (Peak: 32712 KB)
-Design Loading CPU Usage: 20 ms
