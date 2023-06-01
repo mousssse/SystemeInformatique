@@ -27,3 +27,7 @@ test: all
 	./c_lang ./test/output_function.s pythonDict.py < test/test_function.c
 	python3 ./branching.py ./test/output_function.s
 	python3 ./crossCompiler.py ./test/output_function.s
+
+	./c_lang ./test/presentation.s pythonDict.py < test/test_presentation.c
+	python3 ./branching.py ./test/presentation.s
+	python3 ./crossCompiler.py ./test/presentation.s
