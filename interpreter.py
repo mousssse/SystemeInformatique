@@ -101,10 +101,10 @@ def execute_instruction(instr):
         if op == 'b': nextAddress = resolve_value(params)
         elif op == 'beq' and flags['Z'] == 1: nextAddress = resolve_value(params)
         elif op == 'bne' and flags['Z'] != 1: nextAddress = resolve_value(params)
-        elif op == 'blt' and flags['N'] == 1: nextAddress = resolve_value(params)
-        elif op == 'bge' and flags['N'] != 1: nextAddress = resolve_value(params)
-        elif op == 'bgt' and flags['C'] == 1: nextAddress = resolve_value(params)
-        elif op == 'ble' and flags['C'] != 1: nextAddress = resolve_value(params)
+        elif op == 'blt' and flags['N'] == 1 and flags['Z'] != 1: nextAddress = resolve_value(params)
+        elif op == 'ble' and (flags['N'] == 1 or flags['Z'] == 1): nextAddress = resolve_value(params)
+        elif op == 'bgt' and flags['N'] != 1 and flags['Z'] != 1: nextAddress = resolve_value(params)
+        elif op == 'bge' and (flags['N'] != 1 or flags['Z'] == 1): nextAddress = resolve_value(params)
     else:
         print(f"Unknown instruction: '{op}'")
         return True
